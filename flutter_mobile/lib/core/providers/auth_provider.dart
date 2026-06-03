@@ -247,6 +247,11 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
       );
       await _persistTokens(tokens);
 
+      // Seed state with tokens so the Dio interceptor has them for getMe()
+      state = AsyncData(
+        AuthState(user: null, tokens: tokens, isLoading: true),
+      );
+
       final user = await _authApi.me();
 
       if (user.role == UserRole.admin) {
