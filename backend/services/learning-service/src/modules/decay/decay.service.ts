@@ -142,7 +142,7 @@ export async function getDecayStatus(enrollmentId: string, userId: string) {
   const nodes = await prisma.learnerNodeProgress.findMany({
     where: {
       enrollmentId,
-      masteryState: { in: ['mastered', 'review_needed', 'relearn'] },
+      masteryState: { in: ['review_needed', 'relearn'] },
     },
     select: {
       nodeId: true,

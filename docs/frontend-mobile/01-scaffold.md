@@ -36,11 +36,11 @@ dependencies:
   google_fonts: ^6.x
 
   # UI utilities
-  shimmer: ^3.x                    # Loading skeleton effect
-  cached_network_image: ^3.x       # Avatar / domain icon caching
+  shimmer: ^3.x # Loading skeleton effect
+  cached_network_image: ^3.x # Avatar / domain icon caching
 
   # Icons
-  lucide_icons: ^1.x               # Matches web Lucide icon set
+  lucide_icons: ^1.x # Matches web Lucide icon set
 
 dev_dependencies:
   flutter_test:
@@ -80,7 +80,7 @@ flutter_mobile/lib/
 │   └── (all other features empty)
 ├── widgets/
 │   ├── app_shell.dart               # BottomNavigationBar scaffold
-│   ├── atlas_app_bar.dart
+│   ├── Yeneta_app_bar.dart
 │   ├── empty_state.dart
 │   └── loading_shimmer.dart
 └── main.dart
@@ -91,6 +91,7 @@ flutter_mobile/lib/
 ## Key Implementation Details
 
 ### `lib/core/theme/app_colors.dart`
+
 ```dart
 class AppColors {
   static const Color background   = Color(0xFFFAF7F1);
@@ -107,6 +108,7 @@ class AppColors {
 ```
 
 ### `lib/core/theme/app_theme.dart`
+
 Use `GoogleFonts.cormorantGaramondTextTheme()` as the base, overlaying `Crimson Text` for body and `JetBrains Mono` for labels. Set `scaffoldBackgroundColor` to `AppColors.background`. Cards use `surface` with a `border` outline — no elevation shadows (matches flat web design).
 
 ```dart
@@ -140,6 +142,7 @@ static ThemeData build() => ThemeData(
 ```
 
 ### `lib/core/theme/mastery_config.dart`
+
 ```dart
 enum MasteryState { notStarted, inProgress, mastered, reviewNeeded, relearn, locked }
 
@@ -158,6 +161,7 @@ class MasteryConfig {
 ```
 
 ### `lib/core/api/api_client.dart`
+
 ```dart
 class ApiClient {
   late final Dio _dio;
@@ -179,6 +183,7 @@ final apiClientProvider = Provider((ref) => ApiClient());
 ```
 
 ### `lib/core/router/app_router.dart`
+
 Use `GoRouter` with a `redirect` callback that checks `AuthNotifier` state. Unauthenticated users are always redirected to `/login`. Role checks redirect instructors/admins to their dashboards.
 
 ```dart
@@ -212,6 +217,7 @@ final appRouterProvider = Provider((ref) {
 ```
 
 ### `lib/widgets/app_shell.dart`
+
 - `Scaffold` with `BottomNavigationBar` for 4 core items: Dashboard, Catalog, Notifications, Profile
 - Conditionally add an Instructor or Admin tab based on user role
 - On tablet (`width >= 720`), show a `NavigationRail` (left sidebar) instead of bottom bar — mirrors the web's sidebar

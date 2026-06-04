@@ -111,6 +111,7 @@ export function MicroQuizModal({ nodeId, nodeTitle, enrollmentId, open, onClose 
     try {
       const result = await submitMutation.mutateAsync({
         quizId: state.quiz.id,
+        nodeId,
         payload: {
           enrollmentId,
           answers: Object.entries(state.answers).map(([questionId, answer]) => ({ questionId, answer })),

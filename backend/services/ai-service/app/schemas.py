@@ -32,6 +32,8 @@ class LearnerContext(_CamelModel):
 class ExplanationContext(_CamelModel):
     summary: str
     key_points: list[str]
+    why_it_matters: str | None = None
+    example: str | None = None
     common_mistakes: list[str] | None = None
 
 
@@ -58,19 +60,21 @@ class AskQuestionInput(_CamelModel):
     learner_context: LearnerContext | None = None
 
 
-class GeneratedQuestion(BaseModel):
+class GeneratedQuestion(_CamelModel):
     question_text: str
     options: list[str]
     correct_answer: str
     explanation: str
 
 
-class GeneratedQuiz(BaseModel):
+class GeneratedQuiz(_CamelModel):
     questions: list[GeneratedQuestion]
     generated_by: str = "ai_tutor"
 
 
-class GeneratedExplanation(BaseModel):
+class GeneratedExplanation(_CamelModel):
     summary: str
     key_points: list[str]
+    why_it_matters: str | None = None
+    example: str | None = None
     common_mistakes: list[str] | None = None

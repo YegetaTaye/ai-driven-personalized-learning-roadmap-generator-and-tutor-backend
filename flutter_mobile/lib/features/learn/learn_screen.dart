@@ -10,7 +10,7 @@ import '../../core/providers/explanation_provider.dart';
 import '../../core/providers/my_learning_provider.dart';
 import '../../core/providers/roadmap_provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../widgets/atlas_app_bar.dart';
+import '../../widgets/Yeneta_app_bar.dart';
 import '../../widgets/loading_shimmer.dart';
 import 'ai_instructor_drawer.dart';
 import 'explanation_panel.dart';
@@ -140,7 +140,7 @@ class _LearnScreenState extends ConsumerState<LearnScreen> {
               activeNodeId: widget.nodeId,
             ),
           ),
-          appBar: AtlasAppBar(
+          appBar: YenetaAppBar(
             title: node.title,
             leading: IconButton(
               icon: const Icon(Icons.menu),

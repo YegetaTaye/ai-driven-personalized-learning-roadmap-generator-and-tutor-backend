@@ -1,4 +1,4 @@
-# Atlas — AI-Powered Adaptive Learning Platform
+# Yeneta — AI-Powered Adaptive Learning Platform
 
 > A full-stack, microservices learning platform that builds personalised roadmaps, generates learner-specific AI explanations and quizzes, tracks mastery over time, and adapts the learning path in real time when a learner struggles or excels.
 
@@ -27,7 +27,7 @@
 
 ## Overview
 
-Atlas is an adaptive e-learning system built as a final-year project. Learners enrol in a domain (Frontend Development, Backend Development, Data Science, or DevOps Engineering), receive a **personalised** learning roadmap as a Directed Acyclic Graph (DAG), study topics with AI-generated explanations tailored to their experience level and learning style, take AI-generated quizzes with adaptive difficulty, and unlock the next node only after demonstrating mastery.
+Yeneta is an adaptive e-learning system built as a final-year project. Learners enrol in a domain (Frontend Development, Backend Development, Data Science, or DevOps Engineering), receive a **personalised** learning roadmap as a Directed Acyclic Graph (DAG), study topics with AI-generated explanations tailored to their experience level and learning style, take AI-generated quizzes with adaptive difficulty, and unlock the next node only after demonstrating mastery.
 
 The platform adapts in real-time: failed quizzes trigger resource swaps, prerequisite reviews, or domain expert escalation. Knowledge decay is tracked — nodes go stale over time and prompt micro-quiz reviews. Every AI-generated artifact (explanation, quiz, instructor response) is personalised using the learner's familiarity level, learning goal, preferred style, prior skills, and performance history. A dedicated **Learning Insights** system gives learners a GitHub-style activity heatmap, velocity tracking, weak area identification, and achievement rankings — both per-course and across all enrollments.
 
@@ -35,32 +35,32 @@ The platform adapts in real-time: failed quizzes trigger resource swaps, prerequ
 
 ## Key Features
 
-| Category                         | Feature                                                                                                                                      |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Personalised Roadmap**         | DAG shaped by familiarity level (unlock acceleration), prior skills (node subtraction), and learning goal (supplementary node injection)     |
-| **Learner Context Pipeline**     | All AI calls receive a `LearnerContext` object carrying profile fields, quiz history, and performance data                                   |
-| **Personalized AI Explanations** | Explanations adapted to familiarity level (depth), learning style (format), goal (examples), and prior skills (skip redundancies)            |
-| **Personalized AI Instructor**   | Context-aware chat that knows the learner's level, attempts, struggle areas, and overall progress                                            |
-| **Adaptive Quiz Difficulty**     | Quiz difficulty adjusts ±1 tier based on previous scores and overall average; quizzes are grounded in the learner's personalized explanation |
-| **Weak Area Targeting**          | After a quiz failure, wrong-answer learning outcomes are extracted and injected into the re-explanation and re-quiz                          |
-| **Gatekeeper**                   | 5-tier scoring system (strong pass → fail severe) unlocks next nodes or triggers adaptation                                                  |
-| **Knowledge Decay**              | Mastered nodes degrade over time; decay-due nodes surface as micro-quiz reminders                                                            |
-| **Path Branching**               | Learners choose a specialisation at branching points (e.g. Frontend / Backend / Data Science)                                                |
-| **Timeline Estimates**           | Estimated completion dates and weekly targets derived from `weeklyHours × remainingNodeHours`, adjusted by the learner's measured velocity   |
-| **Learning Velocity Tracking**   | Actual vs. estimated hours per node recorded on mastery; timeline predictions adjust in real time                                            |
-| **Resource Discovery**           | SERP API integration serves curated resources per node (videos, docs, tutorials, interactive)                                                |
-| **Resource Adaptation**          | Repeated quiz failures swap resource modality (e.g. video → interactive)                                                                     |
-| **Per-Course Insights**          | Activity heatmap, profile card, velocity gauge, weak areas panel, and top achievements per enrollment                                        |
-| **Global Insights**              | Account-level cross-enrollment heatmap, per-course breakdown cards, global weak areas, and streak tracking                                   |
-| **Gamification — XP & Levels**   | XP awarded on every mastery event and quiz attempt; 10-level progression tracked in a mini sidebar widget                                    |
+| Category                         | Feature                                                                                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Personalised Roadmap**         | DAG shaped by familiarity level (unlock acceleration), prior skills (node subtraction), and learning goal (supplementary node injection)               |
+| **Learner Context Pipeline**     | All AI calls receive a `LearnerContext` object carrying profile fields, quiz history, and performance data                                             |
+| **Personalized AI Explanations** | Explanations adapted to familiarity level (depth), learning style (format), goal (examples), and prior skills (skip redundancies)                      |
+| **Personalized AI Instructor**   | Context-aware chat that knows the learner's level, attempts, struggle areas, and overall progress                                                      |
+| **Adaptive Quiz Difficulty**     | Quiz difficulty adjusts ±1 tier based on previous scores and overall average; quizzes are grounded in the learner's personalized explanation           |
+| **Weak Area Targeting**          | After a quiz failure, wrong-answer learning outcomes are extracted and injected into the re-explanation and re-quiz                                    |
+| **Gatekeeper**                   | 5-tier scoring system (strong pass → fail severe) unlocks next nodes or triggers adaptation                                                            |
+| **Knowledge Decay**              | Mastered nodes degrade over time; decay-due nodes surface as micro-quiz reminders                                                                      |
+| **Path Branching**               | Learners choose a specialisation at branching points (e.g. Frontend / Backend / Data Science)                                                          |
+| **Timeline Estimates**           | Estimated completion dates and weekly targets derived from `weeklyHours × remainingNodeHours`, adjusted by the learner's measured velocity             |
+| **Learning Velocity Tracking**   | Actual vs. estimated hours per node recorded on mastery; timeline predictions adjust in real time                                                      |
+| **Resource Discovery**           | SERP API integration serves curated resources per node (videos, docs, tutorials, interactive)                                                          |
+| **Resource Adaptation**          | Repeated quiz failures swap resource modality (e.g. video → interactive)                                                                               |
+| **Per-Course Insights**          | Activity heatmap, profile card, velocity gauge, weak areas panel, and top achievements per enrollment                                                  |
+| **Global Insights**              | Account-level cross-enrollment heatmap, per-course breakdown cards, global weak areas, and streak tracking                                             |
+| **Gamification — XP & Levels**   | XP awarded on every mastery event and quiz attempt; 10-level progression tracked in a mini sidebar widget                                              |
 | **Gamification — Badges**        | 8 badge types (First Master, Dedicated, Relentless, Quiz Ace, Speed Learner, Completionist, On a Roll, Comeback Kid) auto-awarded from existing events |
-| **Gamification — Weekly Goal**   | Personalised weekly mastery target derived from `weeklyHours ÷ avgNodeHours`; progress bar tracks the current ISO week                       |
-| **Gamification — Streak**        | Visual day-streak counter (flame icon) with milestone XP bonuses at 5 and 14 days                                                           |
-| **My Learning**                  | Persistent sidebar tracking of active courses with last-visited node state                                                                   |
-| **Domain Expert Analytics**      | Per-domain mastery rate bar charts, problem nodes, learner cohort progress, flagged events                                                   |
-| **Admin Ontology Builder**       | Visual React Flow canvas to build/edit domain knowledge graphs with DAG validation and version pipeline                                      |
-| **Notifications**                | In-app notifications for quiz results, decay reminders, and mastery achievements                                                             |
-| **Challenge Projects**           | Optional project prompts unlocked on strong pass                                                                                             |
+| **Gamification — Weekly Goal**   | Personalised weekly mastery target derived from `weeklyHours ÷ avgNodeHours`; progress bar tracks the current ISO week                                 |
+| **Gamification — Streak**        | Visual day-streak counter (flame icon) with milestone XP bonuses at 5 and 14 days                                                                      |
+| **My Learning**                  | Persistent sidebar tracking of active courses with last-visited node state                                                                             |
+| **Domain Expert Analytics**      | Per-domain mastery rate bar charts, problem nodes, learner cohort progress, flagged events                                                             |
+| **Admin Ontology Builder**       | Visual React Flow canvas to build/edit domain knowledge graphs with DAG validation and version pipeline                                                |
+| **Notifications**                | In-app notifications for quiz results, decay reminders, and mastery achievements                                                                       |
+| **Challenge Projects**           | Optional project prompts unlocked on strong pass                                                                                                       |
 
 ---
 
@@ -619,8 +619,8 @@ All routes are prefixed `/api/v1/` and proxied through the Nginx reverse proxy.
 ### 1. Clone and configure
 
 ```bash
-git clone https://github.com/YegetaTaye/atlas.git
-cd atlas/backend
+git clone https://github.com/YegetaTaye/Yeneta.git
+cd Yeneta/backend
 cp .env.example .env
 # Fill in GEMINI_API_KEY, SERPER_API_KEY, JWT_SECRET, etc.
 ```
@@ -754,15 +754,15 @@ Gamification is applied on top of the existing learning loop — it uses events 
 
 ### XP & Levels
 
-| Event | XP |
-|---|---|
-| Node mastered (strong pass ≥ 80%) | +100 XP |
-| Node mastered (marginal pass 70–79%) | +60 XP |
-| Any quiz attempt | +10 XP |
-| Spaced review completed | +20 XP |
-| Streak milestone (5 days) | +50 XP |
-| Streak milestone (14 days) | +100 XP |
-| Full enrollment completed | +300 XP |
+| Event                                | XP      |
+| ------------------------------------ | ------- |
+| Node mastered (strong pass ≥ 80%)    | +100 XP |
+| Node mastered (marginal pass 70–79%) | +60 XP  |
+| Any quiz attempt                     | +10 XP  |
+| Spaced review completed              | +20 XP  |
+| Streak milestone (5 days)            | +50 XP  |
+| Streak milestone (14 days)           | +100 XP |
+| Full enrollment completed            | +300 XP |
 
 **Level thresholds** (10 levels): 0 · 200 · 500 · 900 · 1 400 · 2 000 · 2 700 · 3 500 · 4 400 · 5 400 XP
 
@@ -770,16 +770,16 @@ A **mini XP bar + streak widget** sits at the top of the main sidebar (collapsed
 
 ### Badges
 
-| Badge | Trigger |
-|---|---|
-| **First Master** | Mastered first node |
-| **Dedicated** | 5-day streak |
-| **Relentless** | 14-day streak |
-| **Quiz Ace** | 100% score on any quiz |
+| Badge             | Trigger                                        |
+| ----------------- | ---------------------------------------------- |
+| **First Master**  | Mastered first node                            |
+| **Dedicated**     | 5-day streak                                   |
+| **Relentless**    | 14-day streak                                  |
+| **Quiz Ace**      | 100% score on any quiz                         |
 | **Speed Learner** | Mastered a node in < 50% of its estimated time |
-| **Completionist** | All nodes mastered in an enrollment |
-| **On a Roll** | Weekly goal hit |
-| **Comeback Kid** | Node went from Relearn → Mastered |
+| **Completionist** | All nodes mastered in an enrollment            |
+| **On a Roll**     | Weekly goal hit                                |
+| **Comeback Kid**  | Node went from Relearn → Mastered              |
 
 Each badge is awarded exactly once per learner (idempotent `upsert`). Locked badges are shown as greyed-out cards on the Achievements page so learners always see the full set of goals.
 
@@ -797,19 +797,19 @@ Progress is derived from `LearnerNodeProgress.masteredAt` within the current ISO
 
 Three new Prisma models:
 
-| Model | Purpose |
-|---|---|
-| `UserXp` | Aggregate XP + level per user (one row, upserted on every award) |
-| `XpEvent` | Immutable log of every XP grant (source, amount, optional refId) |
-| `UserBadge` | One row per earned badge, unique on `(userId, badgeKey)` |
+| Model       | Purpose                                                          |
+| ----------- | ---------------------------------------------------------------- |
+| `UserXp`    | Aggregate XP + level per user (one row, upserted on every award) |
+| `XpEvent`   | Immutable log of every XP grant (source, amount, optional refId) |
+| `UserBadge` | One row per earned badge, unique on `(userId, badgeKey)`         |
 
 The gamification service hooks into `gatekeeper.service.ts` via **fire-and-forget** calls (`awardXp(...).catch(() => {})`) so the quiz response is never delayed by gamification writes.
 
 ### API
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/me/gamification` | Bearer | Full gamification summary: XP, level, streak, all badges, weekly goal, last 10 XP events |
+| Method | Endpoint           | Auth   | Description                                                                              |
+| ------ | ------------------ | ------ | ---------------------------------------------------------------------------------------- |
+| `GET`  | `/me/gamification` | Bearer | Full gamification summary: XP, level, streak, all badges, weekly goal, last 10 XP events |
 
 ---
 

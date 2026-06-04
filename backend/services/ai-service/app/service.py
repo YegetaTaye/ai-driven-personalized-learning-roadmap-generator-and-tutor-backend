@@ -109,6 +109,8 @@ def _parse_and_validate_explanation(raw: str | None) -> GeneratedExplanation | N
                 return GeneratedExplanation(
                     summary=summary,
                     key_points=[str(p) for p in key_points_raw if p],
+                    why_it_matters=candidate.get("whyItMatters") or candidate.get("why_it_matters") or None,
+                    example=candidate.get("example") or None,
                     common_mistakes=[str(m) for m in (candidate.get("commonMistakes") or candidate.get("common_mistakes") or []) if m] or None,
                 )
     return None
@@ -270,9 +272,14 @@ async def generate_micro_quiz(input_data: NodeContextInput) -> GeneratedQuiz | N
 # ── Helpers for stream backfill ────────────────────────────────────────────────
 
 def _format_explanation_as_text(exp: GeneratedExplanation) -> str:
-    lines = ["[SUMMARY]", exp.summary, "", "[KEY_POINTS]"]
+    lines = ["[SUMMARY]", exp.summary]
+    if exp.why_it_matters:
+        lines.extend(["", "[WHY_IT_MATTERS]", exp.why_it_matters])
+    lines.extend(["", "[KEY_POINTS]"])
     for p in exp.key_points:
         lines.append(f"- {p}")
+    if exp.example:
+        lines.extend(["", "[EXAMPLE]", exp.example])
     if exp.common_mistakes:
         lines.extend(["", "[COMMON_MISTAKES]"])
         for m in exp.common_mistakes:
@@ -282,16 +289,20 @@ def _format_explanation_as_text(exp: GeneratedExplanation) -> str:
 
 def _parse_streamed_text(text: str) -> GeneratedExplanation | None:
     import re
-    summary_m = re.search(r"\[SUMMARY\]([\s\S]*?)(?=\[KEY_POINTS\]|\[COMMON_MISTAKES\]|$)", text)
-    points_m = re.search(r"\[KEY_POINTS\]([\s\S]*?)(?=\[COMMON_MISTAKES\]|$)", text)
+    summary_m  = re.search(r"\[SUMMARY\]([\s\S]*?)(?=\[WHY_IT_MATTERS\]|\[KEY_POINTS\]|\[EXAMPLE\]|\[COMMON_MISTAKES\]|$)", text)
+    why_m      = re.search(r"\[WHY_IT_MATTERS\]([\s\S]*?)(?=\[KEY_POINTS\]|\[EXAMPLE\]|\[COMMON_MISTAKES\]|$)", text)
+    points_m   = re.search(r"\[KEY_POINTS\]([\s\S]*?)(?=\[EXAMPLE\]|\[COMMON_MISTAKES\]|$)", text)
+    example_m  = re.search(r"\[EXAMPLE\]([\s\S]*?)(?=\[COMMON_MISTAKES\]|$)", text)
     mistakes_m = re.search(r"\[COMMON_MISTAKES\]([\s\S]*?)$", text)
 
     summary = summary_m.group(1).strip() if summary_m else ""
+    why_it_matters = why_m.group(1).strip() if why_m else None
     key_points = [
         ln.lstrip("- ").strip()
         for ln in (points_m.group(1) if points_m else "").splitlines()
         if ln.strip().startswith("-")
     ]
+    example = example_m.group(1).strip() if example_m else None
     mistakes = [
         ln.lstrip("- ").strip()
         for ln in (mistakes_m.group(1) if mistakes_m else "").splitlines()
@@ -299,7 +310,13 @@ def _parse_streamed_text(text: str) -> GeneratedExplanation | None:
     ] or None
 
     if summary and key_points:
-        return GeneratedExplanation(summary=summary, key_points=key_points, common_mistakes=mistakes)
+        return GeneratedExplanation(
+            summary=summary,
+            why_it_matters=why_it_matters or None,
+            key_points=key_points,
+            example=example or None,
+            common_mistakes=mistakes,
+        )
     return None
 
 

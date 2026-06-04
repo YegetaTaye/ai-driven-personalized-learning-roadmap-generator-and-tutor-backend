@@ -6,7 +6,7 @@ import '../../core/models/roadmap_node.dart';
 import '../../core/providers/enrollments_provider.dart';
 import '../../core/providers/roadmap_provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../widgets/atlas_app_bar.dart';
+import '../../widgets/Yeneta_app_bar.dart';
 import '../../widgets/error_widget.dart';
 import '../../widgets/loading_shimmer.dart';
 import '../resources/resources_panel.dart';
@@ -35,7 +35,7 @@ class _RoadmapScreenState extends ConsumerState<RoadmapScreen> {
 
     return roadmapAsync.when(
       loading: () => const LoadingShimmer(),
-      error: (_, __) => AtlasErrorWidget(
+      error: (_, __) => YenetaErrorWidget(
         message: 'Unable to load roadmap.',
         onRetry: () =>
             ref.invalidate(roadmapBundleProvider(widget.enrollmentId)),
@@ -51,7 +51,7 @@ class _RoadmapScreenState extends ConsumerState<RoadmapScreen> {
 
         return Scaffold(
           backgroundColor: AppColors.background,
-          appBar: AtlasAppBar(
+          appBar: YenetaAppBar(
             title: title,
             actions: <Widget>[
               IconButton(

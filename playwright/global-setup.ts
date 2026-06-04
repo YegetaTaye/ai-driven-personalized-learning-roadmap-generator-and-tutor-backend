@@ -92,7 +92,7 @@ async function loginAndSaveState(
 
   const { user, accessToken, refreshToken } = (await res.json()) as LoginResponse;
 
-  // Shape expected by Zustand persist ('atlas-auth' key)
+  // Shape expected by Zustand persist ('Yeneta-auth' key)
   const zustandState = {
     state: { user, accessToken, refreshToken },
     version: 0,

@@ -9,6 +9,8 @@ from app.cache import invalidate_remedial_cache
 from app.circuit_breaker import get_circuit_state
 from app.clients.ollama_client import is_ollama_reachable
 from app.clients.gemini_client import is_gemini_configured
+from app.clients.phi4_client import is_phi4_reachable
+from app.config import settings
 from app.schemas import AskQuestionInput, NodeContextInput
 
 router = APIRouter(prefix="/ai", tags=["AI"])
@@ -27,19 +29,19 @@ _SSE_HEADERS = {
 @router.post("/generate-quiz")
 async def generate_quiz(body: NodeContextInput):
     quiz = await service.generate_quiz(body)
-    return {"quiz": quiz.model_dump() if quiz else None, "cached": False}
+    return {"quiz": quiz.model_dump(by_alias=True) if quiz else None, "cached": False}
 
 
 @router.post("/generate-explanation")
 async def generate_explanation(body: NodeContextInput):
     explanation = await service.generate_explanation(body)
-    return {"explanation": explanation.model_dump() if explanation else None}
+    return {"explanation": explanation.model_dump(by_alias=True) if explanation else None}
 
 
 @router.post("/generate-micro-quiz")
 async def generate_micro_quiz(body: NodeContextInput):
     quiz = await service.generate_micro_quiz(body)
-    return {"quiz": quiz.model_dump() if quiz else None}
+    return {"quiz": quiz.model_dump(by_alias=True) if quiz else None}
 
 
 @router.post("/ask-question")
@@ -94,9 +96,28 @@ async def invalidate_cache(node_id: str):
 
 @router.get("/health")
 async def health_detail():
-    ollama_up, cb_state = await is_ollama_reachable(), await get_circuit_state("ollama")
+    phi4_up, ollama_up, phi4_cb, ollama_cb = (
+        await is_phi4_reachable(),
+        await is_ollama_reachable(),
+        await get_circuit_state("phi4"),
+        await get_circuit_state("ollama"),
+    )
     return {
         "status": "ok",
-        "ollama": {"reachable": ollama_up, "circuit_breaker": cb_state},
-        "gemini": {"configured": is_gemini_configured()},
+        "providers": {
+            "phi4": {
+                "configured": bool(settings.phi4_base_url),
+                "reachable": phi4_up,
+                "url": settings.phi4_base_url or None,
+                "circuit_breaker": phi4_cb,
+            },
+            "ollama": {
+                "configured": True,
+                "reachable": ollama_up,
+                "circuit_breaker": ollama_cb,
+            },
+            "gemini": {
+                "configured": is_gemini_configured(),
+            },
+        },
     }

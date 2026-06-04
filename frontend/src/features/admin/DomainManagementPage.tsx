@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import { useDomainsQuery } from '@/api/domains';
+import { useDomainsQuery, useDeleteDomainMutation } from '@/api/domains';
+import { useAuth } from '@/hooks/useAuth';
 import type { Domain } from '@/types';
 import { DomainForm } from './components/DomainForm';
 import { OntologyVersionList } from './components/OntologyVersionList';
 
 export default function DomainManagementPage() {
+  const { isAdmin } = useAuth();
   const { data: domains, isLoading } = useDomainsQuery();
+  const deleteMutation = useDeleteDomainMutation();
   const [formDomain, setFormDomain] = useState<Domain | null | 'new'>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   return (
     <div className="flex flex-col gap-5">
@@ -84,6 +88,14 @@ export default function DomainManagementPage() {
                   >
                     {expandedId === domain.id ? '▲ Ontologies' : '▼ Ontologies'}
                   </button>
+                  <button
+                    onClick={() => setConfirmDeleteId(domain.id)}
+                    className="px-3 py-1.5 rounded-[8px] text-[12px] transition-colors hover:bg-[#fce8e8]"
+                    style={{ fontFamily: 'JetBrains Mono, monospace', color: 'oklch(0.52 0.18 25)', border: '1px solid oklch(0.80 0.08 25)' }}
+                    title={isAdmin ? 'Delete domain' : 'Delete (only if not yet published)'}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
 
@@ -91,6 +103,49 @@ export default function DomainManagementPage() {
               {expandedId === domain.id && (
                 <div className="px-5 pb-5 pt-1 border-t" style={{ borderColor: '#ebe6db' }}>
                   <OntologyVersionList domainId={domain.id} />
+                </div>
+              )}
+
+              {/* Inline delete confirmation */}
+              {confirmDeleteId === domain.id && (
+                <div
+                  className="px-5 py-4 border-t flex items-center gap-3 flex-wrap"
+                  style={{ borderColor: 'oklch(0.88 0.06 25)', background: 'oklch(0.97 0.02 25)' }}
+                >
+                  <span className="text-[14px] flex-1" style={{ fontFamily: "'Crimson Pro', serif", color: 'oklch(0.42 0.18 25)' }}>
+                    {isAdmin
+                      ? `Delete "${domain.name}" and all its ontologies, nodes, and enrollments? This cannot be undone.`
+                      : `Delete "${domain.name}"? Only allowed if no ontology is published or verified.`}
+                  </span>
+                  <button
+                    disabled={deleteMutation.isPending}
+                    onClick={async () => {
+                      try {
+                        await deleteMutation.mutateAsync({ id: domain.id, slug: domain.slug });
+                        setConfirmDeleteId(null);
+                        if (expandedId === domain.id) setExpandedId(null);
+                      } catch {
+                        // error shown via mutation state
+                      }
+                    }}
+                    className="px-4 py-1.5 rounded-[8px] text-[13px] transition-colors disabled:opacity-50"
+                    style={{ background: 'oklch(0.52 0.18 25)', color: '#fff', fontFamily: "'Crimson Pro', serif" }}
+                  >
+                    {deleteMutation.isPending ? 'Deleting…' : 'Yes, delete'}
+                  </button>
+                  <button
+                    onClick={() => setConfirmDeleteId(null)}
+                    className="px-4 py-1.5 rounded-[8px] text-[13px] border transition-colors hover:bg-[#ebe6db]"
+                    style={{ borderColor: '#d6cfbf', color: '#6e645a', fontFamily: "'Crimson Pro', serif" }}
+                  >
+                    Cancel
+                  </button>
+                  {deleteMutation.isError && (
+                    <p className="w-full text-[12px] mt-1" style={{ fontFamily: "'Crimson Pro', serif", color: 'oklch(0.52 0.18 25)' }}>
+                      {(deleteMutation.error as { response?: { data?: { error?: { message?: string } } } })
+                        ?.response?.data?.error?.message ?? 'Failed to delete. Try again.'}
+                    </p>
+                  )}
                 </div>
               )}
             </div>

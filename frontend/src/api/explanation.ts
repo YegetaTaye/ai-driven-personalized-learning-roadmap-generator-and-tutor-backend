@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { apiClient } from './client';
 import { useAuthStore } from '@/store/auth.store';
@@ -31,28 +31,34 @@ export function useExplanationQuery(nodeId: string, enabled: boolean) {
 
 export interface StreamedSections {
   summary: string;
+  whyItMatters: string;
   keyPoints: string[];
+  example: string;
   commonMistakes: string[];
 }
 
 export function parseStreamSections(text: string): StreamedSections {
-  const summaryM    = text.match(/\[SUMMARY\]([\s\S]*?)(?=\[KEY_POINTS\]|\[COMMON_MISTAKES\]|$)/);
-  const keyPointsM  = text.match(/\[KEY_POINTS\]([\s\S]*?)(?=\[COMMON_MISTAKES\]|$)/);
-  const mistakesM   = text.match(/\[COMMON_MISTAKES\]([\s\S]*?)$/);
+  const summaryM      = text.match(/\[SUMMARY\]([\s\S]*?)(?=\[WHY_IT_MATTERS\]|\[KEY_POINTS\]|\[EXAMPLE\]|\[COMMON_MISTAKES\]|$)/);
+  const whyM          = text.match(/\[WHY_IT_MATTERS\]([\s\S]*?)(?=\[KEY_POINTS\]|\[EXAMPLE\]|\[COMMON_MISTAKES\]|$)/);
+  const keyPointsM    = text.match(/\[KEY_POINTS\]([\s\S]*?)(?=\[EXAMPLE\]|\[COMMON_MISTAKES\]|$)/);
+  const exampleM      = text.match(/\[EXAMPLE\]([\s\S]*?)(?=\[COMMON_MISTAKES\]|$)/);
+  const mistakesM     = text.match(/\[COMMON_MISTAKES\]([\s\S]*?)$/);
 
   const summary = summaryM?.[1]?.trim() ?? '';
+  const whyItMatters = whyM?.[1]?.trim() ?? '';
   const keyPoints = (keyPointsM?.[1] ?? '')
     .split('\n')
     .filter((l) => l.trim().startsWith('-'))
     .map((l) => l.replace(/^[-•]\s*/, '').trim())
     .filter(Boolean);
+  const example = exampleM?.[1]?.trim() ?? '';
   const commonMistakes = (mistakesM?.[1] ?? '')
     .split('\n')
     .filter((l) => l.trim().startsWith('-'))
     .map((l) => l.replace(/^[-•]\s*/, '').trim())
     .filter(Boolean);
 
-  return { summary, keyPoints, commonMistakes };
+  return { summary, whyItMatters, keyPoints, example, commonMistakes };
 }
 
 // ── SSE streaming hook ────────────────────────────────────────────────────────
@@ -165,6 +171,7 @@ export function useExplanationStream(
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodeId, enabled]);
 
-  const sections = parseStreamSections(text);
+  // Memoize so callers that include `sections` in useEffect deps don't re-fire every render.
+  const sections = useMemo(() => parseStreamSections(text), [text]);
   return { text, sections, isStreaming, isDone, isError };
 }

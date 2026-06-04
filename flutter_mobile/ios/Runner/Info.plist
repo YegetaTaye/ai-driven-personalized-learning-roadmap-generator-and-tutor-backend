@@ -56,10 +56,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.atlas.mobile</string>
+			<string>com.Yeneta.mobile</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>atlasmobile</string>
+				<string>Yenetamobile</string>
 			</array>
 		</dict>
 	</array>

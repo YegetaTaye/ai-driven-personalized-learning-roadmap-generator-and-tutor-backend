@@ -10,6 +10,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    allowedHosts: ['yeneta.learn.com'],
     proxy: {
       // Route through nginx (port 8080) which dispatches to the correct microservice
       '/api/v1': {

@@ -86,7 +86,7 @@ export default function AttemptReviewPage() {
               color: "#3d342a",
             }}
           >
-            Atlas
+            Yeneta
             <em style={{ fontStyle: "italic", color: "#6e645a" }}>.learn</em>
           </span>
         </Link>

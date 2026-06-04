@@ -1,55 +1,59 @@
 @import "tailwindcss";
 
 /* ── Google Fonts ──────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 /* ── Design tokens ─────────────────────────────────────────────────────────── */
 @theme {
-  --color-canvas:      #f3efe7;
-  --color-surface:     #faf7f1;
-  --color-muted:       #ebe6db;
-  --color-border:      #d6cfbf;
-  --color-text:        #1a1614;
-  --color-text-sub:    #6e645a;
-  --color-text-faint:  #9a9088;
-  --color-accent:      oklch(0.62 0.18 28);
+  --color-canvas: #f3efe7;
+  --color-surface: #faf7f1;
+  --color-muted: #ebe6db;
+  --color-border: #d6cfbf;
+  --color-text: #1a1614;
+  --color-text-sub: #6e645a;
+  --color-text-faint: #9a9088;
+  --color-accent: oklch(0.62 0.18 28);
   --color-accent-muted: color-mix(in srgb, oklch(0.62 0.18 28) 12%, #faf7f1);
 
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-serif:   'Crimson Pro', Georgia, serif;
-  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-serif: "Crimson Pro", Georgia, serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
 
-  --color-mastery-mastered:       oklch(0.60 0.13 150);
-  --color-mastery-in-progress:    oklch(0.55 0.13 250);
-  --color-mastery-review-needed:  oklch(0.72 0.13 70);
-  --color-mastery-relearn:        oklch(0.60 0.18 28);
-  --color-mastery-not-started:    oklch(0.72 0.02 80);
-  --color-mastery-locked:         #c2b9a6;
+  --color-mastery-mastered: oklch(0.6 0.13 150);
+  --color-mastery-in-progress: oklch(0.55 0.13 250);
+  --color-mastery-review-needed: oklch(0.72 0.13 70);
+  --color-mastery-relearn: oklch(0.6 0.18 28);
+  --color-mastery-not-started: oklch(0.72 0.02 80);
+  --color-mastery-locked: #c2b9a6;
 
-  --background:         #f3efe7;
-  --foreground:         #1a1614;
-  --card:               #faf7f1;
-  --card-foreground:    #1a1614;
-  --popover:            #faf7f1;
+  --background: #f3efe7;
+  --foreground: #1a1614;
+  --card: #faf7f1;
+  --card-foreground: #1a1614;
+  --popover: #faf7f1;
   --popover-foreground: #1a1614;
-  --primary:            #1a1614;
+  --primary: #1a1614;
   --primary-foreground: #f3efe7;
-  --secondary:          #ebe6db;
+  --secondary: #ebe6db;
   --secondary-foreground: #1a1614;
-  --muted:              #ebe6db;
-  --muted-foreground:   #6e645a;
-  --accent:             oklch(0.62 0.18 28);
-  --accent-foreground:  #faf7f1;
-  --destructive:        oklch(0.55 0.20 25);
+  --muted: #ebe6db;
+  --muted-foreground: #6e645a;
+  --accent: oklch(0.62 0.18 28);
+  --accent-foreground: #faf7f1;
+  --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: #faf7f1;
-  --border:             #d6cfbf;
-  --input:              #d6cfbf;
-  --ring:               oklch(0.62 0.18 28);
-  --radius:             0.625rem;
+  --border: #d6cfbf;
+  --input: #d6cfbf;
+  --ring: oklch(0.62 0.18 28);
+  --radius: 0.625rem;
 }
 
 @layer base {
-  *, *::before, *::after { box-sizing: border-box; }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
   html {
     font-family: var(--font-serif);
@@ -72,26 +76,45 @@
     min-height: 100%;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 500;
     letter-spacing: -0.01em;
     color: var(--color-text);
   }
 
-  code, pre, kbd {
+  code,
+  pre,
+  kbd {
     font-family: var(--font-mono);
   }
 }
 
-@keyframes atlasReviewPulse {
-  0%, 100% { box-shadow: 0 0 0 0   color-mix(in srgb, oklch(0.72 0.13 70) 35%, transparent); }
-  50%       { box-shadow: 0 0 0 6px color-mix(in srgb, oklch(0.72 0.13 70) 35%, transparent); }
+@keyframes YenetaReviewPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, oklch(0.72 0.13 70) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 6px
+      color-mix(in srgb, oklch(0.72 0.13 70) 35%, transparent);
+  }
 }
 
-@keyframes atlasFadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0);   }
+@keyframes YenetaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @layer components {
@@ -116,22 +139,50 @@
     text-transform: uppercase;
     color: var(--color-text-faint);
   }
-  .atlas-fade-in {
-    animation: atlasFadeIn 0.18s ease-out forwards;
+  .Yeneta-fade-in {
+    animation: YenetaFadeIn 0.18s ease-out forwards;
   }
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #c2b9a6; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #9a9088; }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #c2b9a6;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9a9088;
+}
 
 /* ── Page transition (View Transitions API) ─────────────────────────────────── */
-@keyframes page-fade-in  { from { opacity: 0; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
-@keyframes page-fade-out { from { opacity: 1; translate: 0 0;  } to { opacity: 0; translate: 0 -8px; } }
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes page-fade-out {
+  from {
+    opacity: 1;
+    translate: 0 0;
+  }
+  to {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
 
 ::view-transition-new(root) {
-  animation: page-fade-in  0.22s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: page-fade-in 0.22s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 ::view-transition-old(root) {
   animation: page-fade-out 0.18s cubic-bezier(0.55, 0, 1, 0.45) both;

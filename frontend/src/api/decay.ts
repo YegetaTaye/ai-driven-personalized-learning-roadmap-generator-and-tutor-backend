@@ -57,11 +57,18 @@ export function useMicroQuizMutation() {
 export function useSubmitMicroAttemptMutation() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ quizId, payload }: { quizId: string; payload: MicroAttemptPayload }) =>
+    mutationFn: ({ quizId, payload, nodeId }: { quizId: string; payload: MicroAttemptPayload; nodeId: string }) =>
       apiClient
         .post<MicroAttemptResult>(`/micro-quizzes/${quizId}/attempt`, payload)
         .then((r) => r.data),
-    onSuccess: () => {
+    onSuccess: (result, { nodeId }) => {
+      if (result.passed) {
+        // Remove the passed node from ALL decay-status caches immediately (optimistic update)
+        qc.setQueriesData<DecayStatus[]>({ queryKey: ['decay-status'] }, (prev) =>
+          prev ? prev.filter((d) => d.nodeId !== nodeId) : prev,
+        );
+      }
+      // Refetch everything to sync server state
       qc.invalidateQueries({ queryKey: ['roadmap'] });
       qc.invalidateQueries({ queryKey: ['decay-status'] });
       qc.invalidateQueries({ queryKey: ['notifications'] });

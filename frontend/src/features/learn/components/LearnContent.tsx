@@ -72,7 +72,10 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
 
   const { sections, isStreaming, isDone, isError } = useExplanationStream(node.id, enabled);
 
-  // Notify parent when the explanation is ready (for AI instructor context)
+  // Notify parent once when the explanation stream finishes.
+  // `sections` is intentionally excluded from deps — parseStreamSections() returns a
+  // new object reference on every render, which would cause an infinite update loop.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (isDone && sections.summary) {
       onExplanationData?.({
@@ -81,7 +84,7 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
         commonMistakes: sections.commonMistakes,
       });
     }
-  }, [isDone, sections, onExplanationData]);
+  }, [isDone, onExplanationData]);
 
   const cfg = MASTERY_CONFIG[node.masteryState];
   const isLocked = !node.unlocked;
@@ -216,17 +219,14 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
             {/* Summary — appears first and grows as the model streams */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span
-                  className="text-[10px] tracking-[0.12em] uppercase"
-                  style={{ fontFamily: 'JetBrains Mono, monospace', color: '#9a9088' }}
-                >
-                  Summary
-                </span>
+                <SectionLabel>Summary</SectionLabel>
                 {isDone && (
                   <ReadAloudButton
                     text={[
                       sections.summary,
+                      sections.whyItMatters ? 'Why it matters. ' + sections.whyItMatters : '',
                       sections.keyPoints.length ? 'Key points. ' + sections.keyPoints.join('. ') : '',
+                      sections.example ? 'Example. ' + sections.example : '',
                       sections.commonMistakes.length ? 'Common mistakes. ' + sections.commonMistakes.join('. ') : '',
                     ].filter(Boolean).join(' ')}
                     state={readState}
@@ -236,9 +236,23 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
               </div>
               <div className="text-[17px]">
                 <MarkdownRenderer context="content">{sections.summary}</MarkdownRenderer>
-                {isStreaming && !sections.keyPoints.length && <StreamCursor />}
+                {isStreaming && !sections.whyItMatters && !sections.keyPoints.length && <StreamCursor />}
               </div>
             </div>
+
+            {/* Why it matters — motivational context */}
+            {sections.whyItMatters && (
+              <div
+                className="rounded-[10px] border-l-2 pl-4 py-1"
+                style={{ borderColor: 'oklch(0.62 0.18 28)' }}
+              >
+                <SectionLabel>Why it matters</SectionLabel>
+                <div className="text-[16px]" style={{ fontFamily: "'Crimson Pro', serif", color: '#5a524a' }}>
+                  <MarkdownRenderer context="content">{sections.whyItMatters}</MarkdownRenderer>
+                  {isStreaming && !sections.keyPoints.length && <StreamCursor />}
+                </div>
+              </div>
+            )}
 
             {/* Key Points — render as they arrive */}
             {sections.keyPoints.length > 0 && (
@@ -255,13 +269,26 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
                       </span>
                       <div className="min-w-0 flex-1">
                         <MarkdownRenderer context="content">{point}</MarkdownRenderer>
-                        {/* Cursor on the last point while still streaming key points */}
-                        {isStreaming && !sections.commonMistakes.length && i === sections.keyPoints.length - 1 && (
+                        {isStreaming && !sections.example && !sections.commonMistakes.length && i === sections.keyPoints.length - 1 && (
                           <StreamCursor />
                         )}
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Example — concrete code/scenario */}
+            {sections.example && (
+              <div>
+                <SectionLabel>Example</SectionLabel>
+                <div
+                  className="rounded-[10px] border p-4 text-[14px]"
+                  style={{ borderColor: '#d6cfbf', background: '#f3efe7', fontFamily: 'JetBrains Mono, monospace' }}
+                >
+                  <MarkdownRenderer context="code">{sections.example}</MarkdownRenderer>
+                  {isStreaming && !sections.commonMistakes.length && <StreamCursor />}
                 </div>
               </div>
             )}
@@ -308,7 +335,7 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
           Take quiz →
         </button>
         <button
-          className="px-5 py-2.5 rounded-full text-[15px] border transition-all hover:bg-[#ebe6db]"
+          className="px-5 py-2.5 rounded-full text-[15px] border transition-all hover:bg-muted"
           style={{ fontFamily: "'Crimson Pro', serif", borderColor: '#c2b9a6', color: '#6e645a' }}
           onClick={() => navigate(`/enrollments/${enrollmentId}/roadmap`)}
         >

@@ -17,8 +17,8 @@ Production-readiness pass: shimmer loading skeletons throughout, comprehensive e
 dev_dependencies:
   integration_test:
     sdk: flutter
-  patrol: ^3.x        # Flutter E2E testing (alternative to Espresso/XCUITest)
-  golden_toolkit: ^0.x  # Golden/screenshot tests
+  patrol: ^3.x # Flutter E2E testing (alternative to Espresso/XCUITest)
+  golden_toolkit: ^0.x # Golden/screenshot tests
 ```
 
 ---
@@ -26,7 +26,9 @@ dev_dependencies:
 ## Polish Tasks
 
 ### Loading Skeletons
+
 Replace all plain `CircularProgressIndicator` usages with `LoadingShimmer` in:
+
 - Catalog grid (shimmer cards in a GridView)
 - Roadmap (shimmer node graph placeholder)
 - Explanation panel (3–4 shimmer text lines)
@@ -36,13 +38,17 @@ Replace all plain `CircularProgressIndicator` usages with `LoadingShimmer` in:
 `LoadingShimmer` wraps a `Shimmer.fromColors` (from the `shimmer` package) with `AppColors.surface` as base and `AppColors.hover` as highlight.
 
 ### Error States
-Every `AsyncValue` provider should have a consistent error UI via a shared `AtlasErrorWidget`:
+
+Every `AsyncValue` provider should have a consistent error UI via a shared `YenetaErrorWidget`:
+
 - Error icon (outline) in `AppColors.textMuted`
 - Message text in Crimson Text 15px
-- "Retry" button that calls `ref.invalidate(provider)` 
+- "Retry" button that calls `ref.invalidate(provider)`
 
 ### Empty States
+
 A shared `EmptyState` widget (icon + title + optional CTA button) used for:
+
 - Catalog: "No domains available yet"
 - My Enrollments: "No courses enrolled — browse the catalog"
 - Notifications: "You're all caught up"
@@ -50,14 +56,17 @@ A shared `EmptyState` widget (icon + title + optional CTA button) used for:
 - Learner list: "No learners enrolled yet"
 
 ### Adaptive Layouts
+
 Audit every screen for tablet (width ≥ 720px):
-- `AppShell`: switch from `BottomNavigationBar` to `NavigationRail` 
+
+- `AppShell`: switch from `BottomNavigationBar` to `NavigationRail`
 - `CatalogScreen`: 3-column grid (vs. 2 on phone)
 - `LearnScreen`: persistent `TopicListDrawer` as side panel (vs. modal drawer on phone)
 - `RoadmapScreen`: larger node sizes; legend always visible
 - `LearnerProgressScreen`: two-column layout (node list | quiz history side by side)
 
 ### Accessibility
+
 - All interactive widgets have `Semantics` labels
 - Icons in bottom nav have `tooltip` set
 - Rating stars have `SemanticsLabel("X out of 5 stars")`
@@ -71,30 +80,33 @@ Audit every screen for tablet (width ≥ 720px):
 
 ### Widget Tests (`test/widget/`)
 
-| File | What to Test |
-|------|-------------|
-| `login_screen_test.dart` | Form validation, error display, submit fires `AuthNotifier.login()` |
-| `domain_card_test.dart` | Renders domain name, enrolled badge when enrolled |
-| `quiz_question_card_test.dart` | Option tap selects answer; already-selected option remains selected |
-| `outcome_screen_test.dart` | `strong_pass` shows challenge project; `fail_low` shows retry button |
-| `mastery_badge_test.dart` | Correct colour for each MasteryState |
-| `toggle_row_test.dart` | Toggle switches state; callback fires |
-| `notifications_badge_test.dart` | Shows count when unread > 0; hidden when 0 |
+| File                            | What to Test                                                         |
+| ------------------------------- | -------------------------------------------------------------------- |
+| `login_screen_test.dart`        | Form validation, error display, submit fires `AuthNotifier.login()`  |
+| `domain_card_test.dart`         | Renders domain name, enrolled badge when enrolled                    |
+| `quiz_question_card_test.dart`  | Option tap selects answer; already-selected option remains selected  |
+| `outcome_screen_test.dart`      | `strong_pass` shows challenge project; `fail_low` shows retry button |
+| `mastery_badge_test.dart`       | Correct colour for each MasteryState                                 |
+| `toggle_row_test.dart`          | Toggle switches state; callback fires                                |
+| `notifications_badge_test.dart` | Shows count when unread > 0; hidden when 0                           |
 
 Use `ProviderScope` overrides to inject mock providers. Mock all API calls — never hit the real network in widget tests.
 
 ### Integration Tests (`integration_test/`)
+
 Use `patrol` for E2E flows on a real device/emulator:
 
-| Test | Steps |
-|------|-------|
-| `auth_flow_test.dart` | Register → verify on dashboard → logout → login → verify on dashboard |
-| `enrollment_flow_test.dart` | Login → catalog → enroll in domain → verify appears on dashboard |
-| `quiz_flow_test.dart` | Login → roadmap → learn screen → take quiz → submit all answers → verify outcome screen |
-| `my_learning_test.dart` | Generate explanation → verify domain appears in My Learning drawer |
+| Test                        | Steps                                                                                   |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| `auth_flow_test.dart`       | Register → verify on dashboard → logout → login → verify on dashboard                   |
+| `enrollment_flow_test.dart` | Login → catalog → enroll in domain → verify appears on dashboard                        |
+| `quiz_flow_test.dart`       | Login → roadmap → learn screen → take quiz → submit all answers → verify outcome screen |
+| `my_learning_test.dart`     | Generate explanation → verify domain appears in My Learning drawer                      |
 
 ### Golden Tests
+
 Use `golden_toolkit` to capture pixel snapshots of:
+
 - `DomainCard` (enrolled / unenrolled states)
 - `OutcomeScreen` for `strong_pass` and `fail_severe` tiers
 - `MasteryBadge` for all 6 states
@@ -111,9 +123,9 @@ name: Flutter CI
 on:
   push:
     branches: [main]
-    paths: ['flutter_mobile/**']
+    paths: ["flutter_mobile/**"]
   pull_request:
-    paths: ['flutter_mobile/**']
+    paths: ["flutter_mobile/**"]
 
 jobs:
   analyze-and-test:
@@ -122,7 +134,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: "3.x"
           channel: stable
           cache: true
       - working-directory: flutter_mobile
@@ -141,7 +153,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: "3.x"
           channel: stable
           cache: true
       - working-directory: flutter_mobile
@@ -154,7 +166,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: "3.x"
           channel: stable
           cache: true
       - working-directory: flutter_mobile

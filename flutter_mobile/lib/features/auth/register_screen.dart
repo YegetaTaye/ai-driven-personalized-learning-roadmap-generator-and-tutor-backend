@@ -53,7 +53,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          'Join Atlas and start your adaptive roadmap.',
+                          'Join Yeneta and start your adaptive roadmap.',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 20),

@@ -22,7 +22,7 @@ class AchievementsScreen extends ConsumerWidget {
 
     return gamificationAsync.when(
       loading: () => const LoadingShimmer(),
-      error: (_, __) => AtlasErrorWidget(
+      error: (_, __) => YenetaErrorWidget(
         message: 'Could not load achievements. Try refreshing.',
         onRetry: () => ref.invalidate(gamificationProvider),
       ),

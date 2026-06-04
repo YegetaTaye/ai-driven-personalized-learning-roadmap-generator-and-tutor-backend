@@ -226,11 +226,11 @@ class AuthNotifier extends AsyncNotifier<AuthState> {
     try {
       final apiBaseUrl = AppConfig.apiBaseUrl;
       final baseUrl = apiBaseUrl.replaceAll(RegExp(r'/+$'), '');
-      final oauthUrl = '$baseUrl/auth/oauth/$provider?redirect_uri=atlasmobile://auth/callback';
+      final oauthUrl = '$baseUrl/auth/oauth/$provider?redirect_uri=Yenetamobile://auth/callback';
 
       final callbackUrl = await FlutterWebAuth2.authenticate(
         url: oauthUrl,
-        callbackUrlScheme: 'atlasmobile',
+        callbackUrlScheme: 'Yenetamobile',
       );
 
       final uri = Uri.parse(callbackUrl);

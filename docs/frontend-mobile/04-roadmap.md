@@ -15,17 +15,17 @@ The core learning experience: an interactive DAG (directed acyclic graph) showin
 
 ```yaml
 dependencies:
-  graphview: ^1.x    # Automatic DAG layout (Sugiyama/Buchheim algorithms)
+  graphview: ^1.x # Automatic DAG layout (Sugiyama/Buchheim algorithms)
 ```
 
 ---
 
 ## API Endpoints
 
-| Method | Path | Notes |
-|--------|------|-------|
-| `GET` | `/enrollments/:id/roadmap` | Returns `{nodes, edges, selectedBranchPath}` |
-| `GET` | `/enrollments/:id/progress` | Progress stats (mastered count, completion %) |
+| Method | Path                        | Notes                                         |
+| ------ | --------------------------- | --------------------------------------------- |
+| `GET`  | `/enrollments/:id/roadmap`  | Returns `{nodes, edges, selectedBranchPath}`  |
+| `GET`  | `/enrollments/:id/progress` | Progress stats (mastered count, completion %) |
 
 ---
 
@@ -56,12 +56,14 @@ lib/
 ### `lib/features/roadmap/roadmap_screen.dart`
 
 **Layout:**
-- `Scaffold` with `AtlasAppBar` showing domain name
+
+- `Scaffold` with `YenetaAppBar` showing domain name
 - A `progress_stats_bar` as a `SliverPersistentHeader` at the top
 - `InteractiveViewer` filling the rest of the screen (pan + pinch-to-zoom, `minScale: 0.3`, `maxScale: 2.5`)
 - Inside `InteractiveViewer`: `GraphView` widget from the `graphview` package using `SugiyamaConfiguration` (top-to-bottom hierarchical layout matching the web)
 
 **Node widget (`node_widget.dart`):**
+
 - `Container` with `borderRadius: 10`, border matching mastery colour, background as 10% tint of mastery colour
 - Node title in Crimson Text (truncated)
 - Mastery state icon (`MasteryConfig.icons[state]`) in top-right corner
@@ -72,9 +74,11 @@ lib/
 `graphview` draws edges automatically. Override the default paint with a `CustomEdgeRenderer` that draws `oklch`-equivalent grey curves matching the web's edge style.
 
 ### `lib/features/roadmap/node_detail_sheet.dart`
+
 A `showModalBottomSheet` with `isScrollControlled: true` and `DraggableScrollableSheet`.
 
 Sheet content (same information as the web node detail drawer):
+
 - Node title (Cormorant Garamond 28px)
 - Mastery state badge
 - Difficulty stars (1–3)
@@ -83,20 +87,25 @@ Sheet content (same information as the web node detail drawer):
 - Attempts count + best quiz score
 
 **Action buttons at bottom:**
+
 - "Learn this topic →" (primary filled) → navigate to `/enrollments/:id/learn/:nodeId`
 - "Take quiz →" (secondary outlined) — enabled only if node is unlocked
 - "Resources" (ghost) → navigate to resources panel
 
 ### `lib/features/roadmap/progress_stats_bar.dart`
+
 Compact header bar (height ~52px):
+
 - Linear progress indicator (mastered / total) with terracotta colour
 - `"X / Y mastered"` text in JetBrains Mono
 - Completion percentage
 
 ### Mastery-colour legend
+
 A floating `Legend` widget (bottom-right, collapsed by default, tap to expand) showing all mastery states with their colours — helpful for first-time users.
 
 ### `lib/core/providers/roadmap_provider.dart`
+
 ```dart
 @riverpod
 Future<RoadmapData> roadmap(RoadmapRef ref, String enrollmentId) async {

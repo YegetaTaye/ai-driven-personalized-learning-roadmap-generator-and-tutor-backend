@@ -7,11 +7,11 @@ import 'core/theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: AtlasMobileApp()));
+  runApp(const ProviderScope(child: YenetaMobileApp()));
 }
 
-class AtlasMobileApp extends ConsumerWidget {
-  const AtlasMobileApp({super.key});
+class YenetaMobileApp extends ConsumerWidget {
+  const YenetaMobileApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,7 +19,7 @@ class AtlasMobileApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: 'Atlas Learning',
+      title: 'Yeneta Learning',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.build(),
       routerConfig: router,

@@ -28,7 +28,7 @@ class DomainDetailScreen extends ConsumerWidget {
       ),
       error: (_, __) => SafeArea(
         bottom: false,
-        child: AtlasErrorWidget(
+        child: YenetaErrorWidget(
           message: 'Unable to load domain details.',
           onRetry: () => ref.invalidate(domainBySlugProvider(slug)),
         ),

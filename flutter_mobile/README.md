@@ -1,6 +1,6 @@
-# Atlas Flutter Mobile
+# Yeneta Flutter Mobile
 
-Phase 0 scaffold for the Atlas adaptive learning mobile app.
+Phase 0 scaffold for the Yeneta adaptive learning mobile app.
 
 ## Stack
 
@@ -19,7 +19,7 @@ Phase 0 scaffold for the Atlas adaptive learning mobile app.
 Override at runtime:
 
 ```bash
-flutter run --dart-define=ATLAS_API_BASE_URL=http://localhost:8080/api/v1
+flutter run --dart-define=Yeneta_API_BASE_URL=http://localhost:8080/api/v1
 ```
 
 ## Current scope

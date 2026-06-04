@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   DialogContent,
@@ -7,8 +8,16 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { useSelectPathMutation, useSwitchPathMutation, type BranchingPoint } from '@/api/branching';
+import { useDomainsQuery } from '@/api/domains';
 import { PathCard, PATH_META } from './components/PathCard';
 import type { BranchPath } from '@/types';
+
+// Map each specialisation path to the domain slug it leads to in the catalogue
+const PATH_TO_DOMAIN_SLUG: Record<BranchPath, string> = {
+  frontend:     'frontend-development',
+  backend:      'backend-development',
+  data_science: 'data-science',
+};
 
 // What to explore next after choosing each path — keyed by selected branchPath
 const NEXT_STEP: Record<BranchPath, { label: string; hint: string }> = {
@@ -45,10 +54,18 @@ export function PathSelectorModal({
   const [succeeded, setSucceeded] = useState(false);
   const selectMutation = useSelectPathMutation(enrollmentId);
   const switchMutation = useSwitchPathMutation(enrollmentId);
+  const { data: allDomains } = useDomainsQuery();
+  const navigate = useNavigate();
 
   const isSwitch = Boolean(currentPath);
   const activeMutation = isSwitch ? switchMutation : selectMutation;
   const paths = branchingPoint.paths;
+
+  // Find the catalogue domain for the chosen path (if it exists)
+  const nextDomainSlug = selected ? PATH_TO_DOMAIN_SLUG[selected] : null;
+  const nextDomain = nextDomainSlug
+    ? allDomains?.find((d) => d.slug === nextDomainSlug)
+    : null;
 
   // Reset state when dialog opens
   const handleOpenChange = (v: boolean) => {
@@ -68,12 +85,7 @@ export function PathSelectorModal({
         await selectMutation.mutateAsync(selected);
       }
       setSucceeded(true);
-      // Give a moment for the success state to read before closing
-      setTimeout(() => {
-        setSucceeded(false);
-        setSelected(null);
-        onClose();
-      }, 1200);
+      // Don't auto-close — let the user decide to explore the next domain or stay
     } catch {
       // error handled by tanstack query
     }
@@ -108,6 +120,7 @@ export function PathSelectorModal({
                 {NEXT_STEP[selected]?.hint}
               </p>
             </div>
+            {/* Next domain CTA */}
             <div
               className="rounded-[10px] border px-4 py-3 max-w-xs w-full text-left"
               style={{ borderColor: '#d6cfbf', background: '#f3efe7' }}
@@ -115,9 +128,41 @@ export function PathSelectorModal({
               <p className="text-[10px] tracking-widest uppercase mb-1" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#9a9088' }}>
                 What's next
               </p>
-              <p className="text-[15px]" style={{ fontFamily: "'Crimson Pro', serif", color: '#1a1614' }}>
-                {NEXT_STEP[selected]?.label}
+              <p className="text-[14px]" style={{ fontFamily: "'Crimson Pro', serif", color: '#1a1614' }}>
+                {nextDomain?.name ?? NEXT_STEP[selected]?.label}
               </p>
+              {nextDomain && (
+                <p className="text-[12px] mt-0.5" style={{ fontFamily: "'Crimson Pro', serif", color: '#9a9088' }}>
+                  {NEXT_STEP[selected]?.hint}
+                </p>
+              )}
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 flex-wrap justify-center">
+              {nextDomain && (
+                <button
+                  onClick={() => {
+                    onClose();
+                    navigate(`/catalog/${nextDomain.slug}`);
+                  }}
+                  className="px-5 py-2.5 rounded-full text-[15px] transition-all hover:opacity-90"
+                  style={{ background: '#1a1614', color: '#f3efe7', fontFamily: "'Crimson Pro', serif" }}
+                >
+                  Explore {nextDomain.name} →
+                </button>
+              )}
+              <button
+                onClick={() => {
+                  setSucceeded(false);
+                  setSelected(null);
+                  onClose();
+                }}
+                className="px-5 py-2.5 rounded-full text-[15px] border transition-all hover:bg-[#ebe6db]"
+                style={{ borderColor: '#d6cfbf', color: '#6e645a', fontFamily: "'Crimson Pro', serif" }}
+              >
+                {nextDomain ? 'Stay on this course' : 'Continue'}
+              </button>
             </div>
           </div>
         ) : (

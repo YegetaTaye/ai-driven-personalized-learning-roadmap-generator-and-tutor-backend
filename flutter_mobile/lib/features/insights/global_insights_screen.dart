@@ -26,7 +26,7 @@ class GlobalInsightsScreen extends ConsumerWidget {
 
     return insightsAsync.when(
       loading: () => const LoadingShimmer(),
-      error: (_, __) => AtlasErrorWidget(
+      error: (_, __) => YenetaErrorWidget(
         message: 'Unable to load insights.',
         onRetry: () => _refresh(ref),
       ),

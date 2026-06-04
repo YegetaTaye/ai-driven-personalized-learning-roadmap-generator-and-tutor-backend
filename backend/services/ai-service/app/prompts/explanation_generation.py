@@ -58,30 +58,34 @@ def build_stream_explanation_prompt(input_data: NodeContextInput) -> str:
 
     desc_line = f"Context: {input_data.description}" if input_data.description else ""
 
-    return f"""You are a technical educator. Write a learning explanation for: "{input_data.node_title}".
+    return f"""You are a technical educator. Write a deep-learning explanation for: "{input_data.node_title}".
 
 {desc_line}
 {outcomes_block}
 {learner_block}{weak_block}
 Rules:
 - Adapt depth and style to the learner profile above.
-- Keep the summary under 150 words.
-- Provide 3 to 5 key points as complete sentences.
-- Optionally list 1 to 3 common mistakes (omit the section if none apply).
+- Keep each section concise but substantive.
 - Write only about the listed learning outcomes.
 
 Output your response in EXACTLY this format with these section markers on their own lines:
 
 [SUMMARY]
-Write 2-3 sentences summarising the topic here.
+2-3 sentences giving a clear conceptual overview of the topic.
+
+[WHY_IT_MATTERS]
+1-2 sentences explaining the real-world relevance: when and why a developer needs this.
 
 [KEY_POINTS]
-- Write each key point as a complete sentence starting with a dash
-- Include 3 to 5 points
+- Each key point as a complete, specific sentence (3-5 points)
+- Focus on the core mechanisms and relationships, not surface definitions
+
+[EXAMPLE]
+A concrete, minimal code snippet or scenario that shows the concept in action.
+Use a code block with language tag if showing code (e.g. ```python ... ```).
 
 [COMMON_MISTAKES]
-- Write each mistake starting with a dash
-- Include 1 to 3 (or omit this section entirely if not applicable)"""
+- Each mistake starting with a dash (1-3 items, or omit this section if none apply)"""
 
 
 def build_explanation_prompt(input_data: NodeContextInput) -> str:
@@ -103,7 +107,7 @@ def build_explanation_prompt(input_data: NodeContextInput) -> str:
 
     desc_line = f"Context: {input_data.description}" if input_data.description else ""
 
-    return f"""You are a technical educator. Write a concise learning explanation for the topic: "{input_data.node_title}".
+    return f"""You are a technical educator. Write a deep-learning explanation for the topic: "{input_data.node_title}".
 
 {desc_line}
 {outcomes_block}
@@ -111,15 +115,16 @@ def build_explanation_prompt(input_data: NodeContextInput) -> str:
 Rules:
 - Write only about concepts within the listed learning outcomes.
 - Adapt the depth, tone, and style to match the learner profile above.
-- Keep the summary under 200 words.
-- Provide 3-5 key points as bullet points.
-- Optionally, list 1-3 common mistakes beginners make.
+- Keep each field concise but substantive.
+- For "example": provide a minimal, concrete code snippet or real scenario (use plain text, no nested JSON).
 
 Respond with ONLY valid JSON. No markdown, no prose, no code blocks.
 
 Required format:
 {{
-  "summary": "...",
-  "keyPoints": ["...", "..."],
-  "commonMistakes": ["...", "..."]
+  "summary": "2-3 sentence conceptual overview",
+  "whyItMatters": "1-2 sentences on real-world relevance and when a developer needs this",
+  "keyPoints": ["Core mechanism or relationship 1", "Core mechanism 2", "..."],
+  "example": "Minimal code snippet or concrete scenario showing the concept in action",
+  "commonMistakes": ["Mistake 1", "..."]
 }}"""

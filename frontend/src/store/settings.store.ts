@@ -17,7 +17,7 @@ interface NotificationPreferences {
   masteryAchievements: boolean;
 }
 
-interface AtlasSettingsState {
+interface YenetaSettingsState {
   learningDefaults: LearningDefaults;
   notifications: NotificationPreferences;
   setWeeklyHoursGoal: (hours: number) => void;
@@ -32,7 +32,7 @@ interface AtlasSettingsState {
   ) => void;
 }
 
-export const useAtlasSettingsStore = create<AtlasSettingsState>()(
+export const useYenetaSettingsStore = create<YenetaSettingsState>()(
   persist(
     (set) => ({
       learningDefaults: {
@@ -80,6 +80,6 @@ export const useAtlasSettingsStore = create<AtlasSettingsState>()(
           notifications: { ...state.notifications, [key]: value },
         })),
     }),
-    { name: 'atlas-settings' },
+    { name: 'Yeneta-settings' },
   ),
 );

@@ -69,6 +69,8 @@ export default function LearnPage() {
   const activeNode = nodes.find((n) => n.id === nodeId) ?? null;
 
   // If node is missing or locked, redirect to the first unlocked node.
+  // Use primitive deps (id/flag) instead of the whole objects to avoid running
+  // on every render when roadmap?.nodes ?? [] creates a new array reference.
   useEffect(() => {
     if (
       !roadmapLoading &&
@@ -80,7 +82,8 @@ export default function LearnPage() {
         replace: true,
       });
     }
-  }, [roadmapLoading, nodes, activeNode, enrollmentId, navigate]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roadmapLoading, activeNode?.id, activeNode?.unlocked, enrollmentId]);
 
   // Track last visited node in My Learning store (only updates entries already added)
   useEffect(() => {

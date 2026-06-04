@@ -13,10 +13,10 @@ The `LearnScreen` — the full-screen reading experience for a single topic node
 
 ## API Endpoints
 
-| Method | Path | Notes |
-|--------|------|-------|
-| `GET` | `/nodes/:nodeId/explanation` | AI explanation — may stream; poll until complete |
-| `GET` | `/enrollments/:id/roadmap` | Reused to get full node list for sidebar |
+| Method | Path                         | Notes                                            |
+| ------ | ---------------------------- | ------------------------------------------------ |
+| `GET`  | `/nodes/:nodeId/explanation` | AI explanation — may stream; poll until complete |
+| `GET`  | `/enrollments/:id/roadmap`   | Reused to get full node list for sidebar         |
 
 ---
 
@@ -45,32 +45,38 @@ lib/
 ## Key Implementation Details
 
 ### `lib/features/learn/learn_screen.dart`
+
 The screen accepts `enrollmentId` and `nodeId` as route params.
 
 **Layout on phone:**
-- `Scaffold` with a custom `LearnAppBar` 
+
+- `Scaffold` with a custom `LearnAppBar`
 - Main body: `ExplanationPanel` (scrollable)
 - A floating action button or app bar action to open the `TopicListDrawer` (via `Scaffold.drawer`)
 - Bottom action bar: "Take quiz →" button
 
 **Layout on tablet (width ≥ 720px):**
+
 - `Row` with a fixed 260px `TopicListDrawer` always visible + flexible `ExplanationPanel`
 - Matches the web's persistent sidebar layout
 
 **State:** Use a `StateProvider<String>` for `activeNodeId` so navigating between topics in the drawer updates the explanation panel without re-mounting the screen.
 
 ### `lib/features/learn/topic_list_drawer.dart`
+
 - Header: course name + progress bar (mastered/total)
 - `ListView` of `TopicRow` widgets (same grouping logic as web: sections separated by branching points)
 - Active node highlighted with dark `AppColors.textPrimary` background + white text
 - Locked nodes: 50% opacity, no tap
 - Tapping a topic updates `activeNodeId` and closes the drawer (on phone)
-- **My Learning section** at top: shown when `myLearningProvider.entries.isNotEmpty`. Lists enrolled courses with their domain names as tappable rows to jump back. Same ×  remove button on swipe or long-press.
+- **My Learning section** at top: shown when `myLearningProvider.entries.isNotEmpty`. Lists enrolled courses with their domain names as tappable rows to jump back. Same × remove button on swipe or long-press.
 
 ### `lib/features/learn/explanation_panel.dart`
+
 Three states:
 
 **1. Prompt state (not yet requested):**
+
 - Node title (Cormorant Garamond 32px)
 - Node description
 - Mastery badge + difficulty stars
@@ -79,18 +85,21 @@ Three states:
 - Centre prompt: "Generate AI explanation" filled button
 
 **2. Loading state:**
+
 - `LoadingShimmer` blocks for 3–4 lines of content (skeleton animation)
 - Monospaced "generating explanation…" label
 
 **3. Content state:**
 Rendered sections (same as web):
+
 - `summary` — Crimson Text 16px, leading 1.6
 - `keyPoints` — bulleted list with terracotta bullets
 - `commonMistakes` — bordered warning cards
 - `examples` (if present) — code-style blocks with JetBrains Mono
 
 ### `lib/core/providers/my_learning_provider.dart`
-Persisted `StateNotifier` backed by `shared_preferences` (key: `atlas_my_learning`).
+
+Persisted `StateNotifier` backed by `shared_preferences` (key: `Yeneta_my_learning`).
 
 ```dart
 class MyLearningEntry {
@@ -111,6 +120,7 @@ class MyLearningNotifier extends StateNotifier<List<MyLearningEntry>> {
 **Trigger:** When the user taps "Generate AI explanation", call `myLearningNotifier.add(...)`. On every node navigation, call `updateLastNode(...)`.
 
 ### `lib/features/learn/learn_app_bar.dart`
+
 - Back button → pops to roadmap
 - Title: node title (truncated)
 - Actions: `[topic list icon button]` (phone only), `[Take quiz icon button]`

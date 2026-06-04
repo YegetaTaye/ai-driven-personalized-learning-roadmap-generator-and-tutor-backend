@@ -189,7 +189,7 @@ export function useResolveEventMutation() {
 
 export type AiStreamState = 'idle' | 'streaming' | 'done' | 'error';
 
-const CACHE_KEY = (domainId: string) => `atlas-ai-analysis:${domainId}`;
+const CACHE_KEY = (domainId: string) => `Yeneta-ai-analysis:${domainId}`;
 
 function readCache(domainId: string): string | null {
   try { return localStorage.getItem(CACHE_KEY(domainId)); } catch { return null; }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../core/theme/app_colors.dart';
 
-class AtlasAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const AtlasAppBar({
+class YenetaAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const YenetaAppBar({
     required this.title,
     this.actions,
     this.leading,

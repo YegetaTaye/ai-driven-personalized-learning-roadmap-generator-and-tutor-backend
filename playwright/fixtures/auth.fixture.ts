@@ -35,7 +35,7 @@ export const test = base.extend<AuthFixtures>({
         // Navigate to a plain page first so localStorage is accessible
         await page.goto('/login');
         await page.evaluate((state: string) => {
-          localStorage.setItem('atlas-auth', state);
+          localStorage.setItem('Yeneta-auth', state);
         }, zustandState);
 
         // Navigate to dashboard; the app reads the injected token immediately
@@ -54,7 +54,7 @@ export const test = base.extend<AuthFixtures>({
 
     const logout = async () => {
       await page.evaluate(() => {
-        localStorage.removeItem('atlas-auth');
+        localStorage.removeItem('Yeneta-auth');
         sessionStorage.clear();
       });
       await page.goto('/login');

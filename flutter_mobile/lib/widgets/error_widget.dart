@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../core/theme/app_colors.dart';
 
-class AtlasErrorWidget extends StatelessWidget {
-  const AtlasErrorWidget({required this.message, this.onRetry, super.key});
+class YenetaErrorWidget extends StatelessWidget {
+  const YenetaErrorWidget({required this.message, this.onRetry, super.key});
 
   final String message;
   final VoidCallback? onRetry;

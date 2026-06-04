@@ -1,3 +1,5 @@
+import http from 'http';
+import { URL } from 'url';
 import config from '../config';
 import type { LearnerContext } from '../modules/progress/learner-context.service';
 
@@ -94,105 +96,85 @@ export async function requestAiAsk(payload: AiAskPayload): Promise<AiAskResponse
 }
 
 /**
+ * Pipe an ai-service SSE stream into an Express response using Node.js http.request.
+ * Node.js fetch (undici) buffers chunked responses from uvicorn before delivering them,
+ * causing the stream to appear frozen. The built-in http module streams chunks immediately.
+ */
+function pipeAiStream(
+  path: string,
+  body: unknown,
+  res: import('express').Response,
+): Promise<void> {
+  return new Promise((resolve) => {
+    const parsed = new URL(BASE);
+    const options: http.RequestOptions = {
+      hostname: parsed.hostname,
+      port: Number(parsed.port) || 80,
+      path,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    };
+
+    const req = http.request(options, (upstream) => {
+      if ((upstream.statusCode ?? 0) >= 400) {
+        if (!res.writableEnded) {
+          res.write('data: {"error":"upstream failed"}\n\n');
+          res.end();
+        }
+        resolve();
+        return;
+      }
+
+      upstream.on('data', (chunk: Buffer) => {
+        if (!res.writableEnded) res.write(chunk);
+      });
+      upstream.on('end', () => {
+        if (!res.writableEnded) res.end();
+        resolve();
+      });
+      upstream.on('error', () => {
+        if (!res.writableEnded) res.end();
+        resolve();
+      });
+    });
+
+    req.setTimeout(120_000, () => req.destroy());
+    req.on('error', () => {
+      if (!res.writableEnded) {
+        res.write('data: {"error":"ai-service unreachable"}\n\n');
+        res.end();
+      }
+      resolve();
+    });
+
+    // Abort the upstream request when the client disconnects
+    res.on('close', () => req.destroy());
+
+    req.write(JSON.stringify(body));
+    req.end();
+  });
+}
+
+/**
  * Call the ai-service streaming explanation endpoint and pipe the SSE response
  * directly into the Express response.  Handles client disconnect gracefully.
  */
-export async function streamAiExplanation(
+export function streamAiExplanation(
   ctx: NodeContext,
   res: import('express').Response,
 ): Promise<void> {
-  const controller = new AbortController();
-  res.on('close',  () => controller.abort());
-  res.on('finish', () => controller.abort());
-
-  let upstream: Response;
-  try {
-    upstream = await fetch(`${BASE}/api/v1/ai/generate-explanation/stream`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(ctx),
-      signal: controller.signal,
-    });
-  } catch {
-    if (!res.writableEnded) {
-      res.write('data: {"error":"ai-service unreachable"}\n\n');
-      res.end();
-    }
-    return;
-  }
-
-  if (!upstream.ok || !upstream.body) {
-    if (!res.writableEnded) {
-      res.write('data: {"error":"upstream failed"}\n\n');
-      res.end();
-    }
-    return;
-  }
-
-  const reader = (upstream.body as ReadableStream<Uint8Array>).getReader();
-  const decoder = new TextDecoder();
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (!res.writableEnded) res.write(decoder.decode(value, { stream: true }));
-    }
-  } catch {
-    // client disconnected — abort is already signalled above
-  } finally {
-    if (!res.writableEnded) res.end();
-  }
+  return pipeAiStream('/api/v1/ai/generate-explanation/stream', ctx, res);
 }
 
 /**
  * Call the ai-service streaming ask-question endpoint and pipe the SSE response
  * directly into the Express response. Handles client disconnect gracefully.
  */
-export async function streamAiAsk(
+export function streamAiAsk(
   payload: AiAskPayload,
   res: import('express').Response,
 ): Promise<void> {
-  const controller = new AbortController();
-  res.on('close',  () => controller.abort());
-  res.on('finish', () => controller.abort());
-
-  let upstream: Response;
-  try {
-    upstream = await fetch(`${BASE}/api/v1/ai/ask-question/stream`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    });
-  } catch {
-    if (!res.writableEnded) {
-      res.write('data: {"error":"ai-service unreachable"}\n\n');
-      res.end();
-    }
-    return;
-  }
-
-  if (!upstream.ok || !upstream.body) {
-    if (!res.writableEnded) {
-      res.write('data: {"error":"upstream failed"}\n\n');
-      res.end();
-    }
-    return;
-  }
-
-  const reader = (upstream.body as ReadableStream<Uint8Array>).getReader();
-  const decoder = new TextDecoder();
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (!res.writableEnded) res.write(decoder.decode(value, { stream: true }));
-    }
-  } catch {
-    // client disconnected
-  } finally {
-    if (!res.writableEnded) res.end();
-  }
+  return pipeAiStream('/api/v1/ai/ask-question/stream', payload, res);
 }
 
 export async function invalidateRemedialQuizCache(nodeId: string): Promise<void> {

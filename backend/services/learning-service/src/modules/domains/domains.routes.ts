@@ -103,4 +103,6 @@ router.post('/domains', authenticate, authorize('admin', 'domain_expert'), ctrl.
  */
 router.patch('/domains/:id', authenticate, authorize('admin', 'domain_expert'), ctrl.updateDomain);
 
+router.delete('/domains/:id', authenticate, authorize('admin', 'domain_expert'), ctrl.deleteDomain);
+
 export default router;

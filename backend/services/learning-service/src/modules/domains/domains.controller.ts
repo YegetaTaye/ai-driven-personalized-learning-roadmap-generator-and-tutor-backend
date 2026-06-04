@@ -32,6 +32,15 @@ export async function createDomain(req: Request, res: Response, next: NextFuncti
   }
 }
 
+export async function deleteDomain(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    await domainsService.deleteDomain(req.params.id, req.user!.role);
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function updateDomain(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const { error, value } = updateDomainSchema.validate(req.body);

@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>()(
 
       isAuthenticated: () => Boolean(get().accessToken),
     }),
-    { name: 'atlas-auth' },
+    { name: 'Yeneta-auth' },
   ),
 );
 

@@ -58,7 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Text(
-                          'Atlas Learning',
+                          'Yeneta Learning',
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         const SizedBox(height: 6),

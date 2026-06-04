@@ -1,6 +1,6 @@
-# Atlas — Landing Page (React / TypeScript)
+# Yeneta — Landing Page (React / TypeScript)
 
-A faithful React port of the Atlas landing page. Editorial bone + coral
+A faithful React port of the Yeneta landing page. Editorial bone + coral
 aesthetic, Cormorant Garamond / Crimson Pro typography, with an interactive
 DAG hero (curved SVG edges + hover tooltips).
 
@@ -19,7 +19,7 @@ src/landing/
 ## Usage
 
 ```tsx
-import LandingPage from './landing/LandingPage';
+import LandingPage from "./landing/LandingPage";
 
 export default function App() {
   return <LandingPage />;

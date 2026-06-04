@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/models/user.dart';
 import '../core/theme/app_colors.dart';
-import 'atlas_app_bar.dart';
+import 'Yeneta_app_bar.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({required this.child, required this.userRole, super.key});
@@ -21,7 +21,7 @@ class AppShell extends StatelessWidget {
 
     final scaffold = MediaQuery.sizeOf(context).width >= 720
         ? Scaffold(
-            appBar: showShellAppBar ? AtlasAppBar(title: title) : null,
+            appBar: showShellAppBar ? YenetaAppBar(title: title) : null,
             body: Row(
               children: <Widget>[
                 NavigationRail(
@@ -47,7 +47,7 @@ class AppShell extends StatelessWidget {
           )
         : Scaffold(
             appBar: showShellAppBar
-                ? AtlasAppBar(
+                ? YenetaAppBar(
                     title: title,
                     actions: _buildActions(context, location),
                   )

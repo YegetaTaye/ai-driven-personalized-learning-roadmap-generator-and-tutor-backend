@@ -80,6 +80,6 @@ export const useMyLearningStore = create<MyLearningState>()(
 
       clear: () => set({ entries: [], visitedExplanationNodeIds: [] }),
     }),
-    { name: 'atlas-my-learning' },
+    { name: 'Yeneta-my-learning' },
   ),
 );

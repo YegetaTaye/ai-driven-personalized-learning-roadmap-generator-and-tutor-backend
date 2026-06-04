@@ -1,4 +1,4 @@
-# Atlas.learn — Pricing Model
+# Yeneta.learn — Pricing Model
 
 > **Status:** Design document. Not yet implemented in code.  
 > **Principle:** Maximally free for learners. Costs charged only when real AI API costs are incurred. Self-hosting is always free.
@@ -19,40 +19,41 @@
 
 ### Gemini 2.5 Flash (the only paid AI tier in the stack)
 
-| Rate | Price per 1M tokens |
-|---|---|
-| Input (text) | $0.30 |
-| Output | $2.50 |
-| Cached input | $0.03 |
+| Rate         | Price per 1M tokens |
+| ------------ | ------------------- |
+| Input (text) | $0.30               |
+| Output       | $2.50               |
+| Cached input | $0.03               |
 
 ### Cost per AI interaction
 
-| Interaction | Input tokens | Output tokens | Cost |
-|---|---|---|---|
-| Generate explanation | ~300 | ~420 | **~$0.0012** |
-| Generate 4-MCQ quiz | ~250 | ~500 | **~$0.0013** |
-| AI Instructor chat turn | ~800 (incl. history) | ~300 | **~$0.0010** |
-| Micro-quiz (decay) | ~200 | ~250 | **~$0.0007** |
+| Interaction             | Input tokens         | Output tokens | Cost         |
+| ----------------------- | -------------------- | ------------- | ------------ |
+| Generate explanation    | ~300                 | ~420          | **~$0.0012** |
+| Generate 4-MCQ quiz     | ~250                 | ~500          | **~$0.0013** |
+| AI Instructor chat turn | ~800 (incl. history) | ~300          | **~$0.0010** |
+| Micro-quiz (decay)      | ~200                 | ~250          | **~$0.0007** |
 
 **Average: $0.001 per AI interaction.**
 
 ### Monthly cost per user (full Gemini usage, worst case)
 
-| Usage level | Interactions/month | Gemini cost/month |
-|---|---|---|
-| Light learner | 50 | $0.05 |
-| Active learner | 200 | $0.20 |
-| Power user | 600 | $0.60 |
+| Usage level    | Interactions/month | Gemini cost/month |
+| -------------- | ------------------ | ----------------- |
+| Light learner  | 50                 | $0.05             |
+| Active learner | 200                | $0.20             |
+| Power user     | 600                | $0.60             |
 
 ### Reality check: most interactions never hit Gemini
 
 The three-tier fallback chain means only ~10–20% of requests reach Gemini:
+
 - **Tier 1 — Phi-4 (Kaggle free GPU):** $0 cost, handles most traffic
 - **Tier 2 — Ollama/Qwen2.5 (local CPU):** $0 cost, offline fallback
 - **Tier 3 — Gemini 2.5 Flash:** $~0.001/call, last resort only
 
 **Effective average Gemini cost per interaction: ~$0.0001–0.0002.**  
-A free user doing 100 interactions/month costs Atlas roughly **$0.01–0.02** in real API spend.
+A free user doing 100 interactions/month costs Yeneta roughly **$0.01–0.02** in real API spend.
 
 ---
 
@@ -60,37 +61,38 @@ A free user doing 100 interactions/month costs Atlas roughly **$0.01–0.02** in
 
 ### Free Tier — "Explorer"
 
-**Who it's for:** Students, self-learners, casual users, anyone trying Atlas for the first time.
+**Who it's for:** Students, self-learners, casual users, anyone trying Yeneta for the first time.
 
-| Feature | Included |
-|---|---|
-| Domain browsing & enrolment | ✅ Unlimited |
-| Roadmap DAG navigation | ✅ Unlimited |
-| Quiz attempts (AI-generated) | ✅ Uses credits |
-| AI explanation per node | ✅ Uses credits |
-| AI Instructor chat | ✅ Uses credits |
-| Micro-quizzes (decay reminders) | ✅ Uses credits |
-| Mastery decay tracking | ✅ Free |
-| Gamification (XP, badges, streaks) | ✅ Free |
-| Progress dashboard & insights | ✅ Free |
-| Completion certificates | ✅ Free (1 per domain) |
-| Learning analytics (velocity) | ✅ Free |
-| Branch path switching | ✅ Free |
+| Feature                            | Included               |
+| ---------------------------------- | ---------------------- |
+| Domain browsing & enrolment        | ✅ Unlimited           |
+| Roadmap DAG navigation             | ✅ Unlimited           |
+| Quiz attempts (AI-generated)       | ✅ Uses credits        |
+| AI explanation per node            | ✅ Uses credits        |
+| AI Instructor chat                 | ✅ Uses credits        |
+| Micro-quizzes (decay reminders)    | ✅ Uses credits        |
+| Mastery decay tracking             | ✅ Free                |
+| Gamification (XP, badges, streaks) | ✅ Free                |
+| Progress dashboard & insights      | ✅ Free                |
+| Completion certificates            | ✅ Free (1 per domain) |
+| Learning analytics (velocity)      | ✅ Free                |
+| Branch path switching              | ✅ Free                |
 
 **Monthly credit allowance: 30 credits**, refreshed on the 1st of every month.
 
 #### Credit costs
 
-| Action | Credits consumed |
-|---|---|
-| Generate AI explanation | 2 credits |
-| Generate quiz | 2 credits |
-| AI Instructor message | 1 credit |
-| Micro-quiz (decay) | 1 credit |
+| Action                  | Credits consumed |
+| ----------------------- | ---------------- |
+| Generate AI explanation | 2 credits        |
+| Generate quiz           | 2 credits        |
+| AI Instructor message   | 1 credit         |
+| Micro-quiz (decay)      | 1 credit         |
 
 With 30 credits/month a free user can realistically:
+
 - Study ~8 new nodes with explanation + quiz each month, or
-- Have ~30 AI Instructor conversations, or  
+- Have ~30 AI Instructor conversations, or
 - Any mix thereof.
 
 **Credits do not roll over.** Unused credits expire at month end to prevent stockpiling.
@@ -99,25 +101,25 @@ With 30 credits/month a free user can realistically:
 
 ### Pro Tier — "Scholar"
 
-**Who it's for:** Committed learners who use Atlas daily and want no friction.
+**Who it's for:** Committed learners who use Yeneta daily and want no friction.
 
-| Feature | Included |
-|---|---|
-| Everything in Free | ✅ |
-| **Unlimited AI credits** | ✅ |
-| Priority AI routing (best model first) | ✅ |
-| Faster quiz & explanation generation | ✅ |
-| Unlimited certificates | ✅ |
-| Advanced insights (full velocity history) | ✅ |
-| Early access to new domains | ✅ |
-| Support response within 48h | ✅ |
+| Feature                                   | Included |
+| ----------------------------------------- | -------- |
+| Everything in Free                        | ✅       |
+| **Unlimited AI credits**                  | ✅       |
+| Priority AI routing (best model first)    | ✅       |
+| Faster quiz & explanation generation      | ✅       |
+| Unlimited certificates                    | ✅       |
+| Advanced insights (full velocity history) | ✅       |
+| Early access to new domains               | ✅       |
+| Support response within 48h               | ✅       |
 
 #### Pro pricing
 
-| Billing | Global | Ethiopia (PPP ~12%) |
-|---|---|---|
-| Monthly | **$6/month** | **75 ETB/month (~$0.75)** |
-| Annual | **$48/year ($4/mo)** | **500 ETB/year (~$5)** |
+| Billing | Global               | Ethiopia (PPP ~12%)       |
+| ------- | -------------------- | ------------------------- |
+| Monthly | **$6/month**         | **75 ETB/month (~$0.75)** |
+| Annual  | **$48/year ($4/mo)** | **500 ETB/year (~$5)**    |
 
 Rationale for global price: $6/month sits below Brilliant ($13.49/mo billed annually) and well below Duolingo Max ($14/mo). At $0.001/AI call with caching and the three-tier system, a heavy Pro user doing 1,000 AI interactions/month costs ~$0.10–0.20 in real API spend.
 
@@ -127,24 +129,24 @@ Rationale for global price: $6/month sits below Brilliant ($13.49/mo billed annu
 
 **Who it's for:** Universities, bootcamps, corporate training programs.
 
-| Feature | Included |
-|---|---|
-| Everything in Pro | ✅ |
-| Shared credit pool across learners | ✅ |
-| Instructor dashboard for all enrolled learners | ✅ |
-| Custom domain branding | ✅ |
-| Bulk learner management (CSV import) | ✅ |
-| Priority support (24h SLA) | ✅ |
-| Dedicated ontology namespace | ✅ |
-| Quarterly usage reports | ✅ |
+| Feature                                        | Included |
+| ---------------------------------------------- | -------- |
+| Everything in Pro                              | ✅       |
+| Shared credit pool across learners             | ✅       |
+| Instructor dashboard for all enrolled learners | ✅       |
+| Custom domain branding                         | ✅       |
+| Bulk learner management (CSV import)           | ✅       |
+| Priority support (24h SLA)                     | ✅       |
+| Dedicated ontology namespace                   | ✅       |
+| Quarterly usage reports                        | ✅       |
 
 #### Campus pricing
 
-| Size | Monthly | Annual |
-|---|---|---|
-| Up to 25 learners | $40/month | $360/year |
-| Up to 100 learners | $120/month | $1,080/year |
-| 100+ learners | Contact for quote | — |
+| Size               | Monthly           | Annual      |
+| ------------------ | ----------------- | ----------- |
+| Up to 25 learners  | $40/month         | $360/year   |
+| Up to 100 learners | $120/month        | $1,080/year |
+| 100+ learners      | Contact for quote | —           |
 
 Ethiopian institutional pricing: ~12% of global → ~500–1,500 ETB/month depending on cohort size.
 
@@ -157,17 +159,20 @@ Ethiopian institutional pricing: ~12% of global → ~500–1,500 ETB/month depen
 **Cost: $0. Always.**
 
 Requirements:
+
 - Docker Compose + Linux VPS or on-premises server
 - Your own AI API keys (Gemini, or run Ollama locally — both free tiers supported)
 - Postgres + Redis
 
 What you get:
-- Full Atlas.learn codebase (open-source)
+
+- Full Yeneta.learn codebase (open-source)
 - All features unlocked with no credit limits
 - Full data sovereignty — no learner data leaves your infrastructure
 - Community support via GitHub Issues
 
 Ideal for:
+
 - AASTU, Addis Ababa University, or any institution with a server
 - Corporate training programs that can provision a VM
 - NGOs delivering technical education in low-connectivity regions
@@ -178,13 +183,13 @@ Ideal for:
 
 To encourage engagement and reduce churn without charging, free users can earn bonus credits:
 
-| Action | Bonus credits |
-|---|---|
-| Complete a node (strong pass) | +1 credit |
-| Maintain a 7-day streak | +3 credits |
-| First enrolment in a new domain | +5 credits |
-| Refer a friend who signs up | +10 credits |
-| Complete a full domain roadmap | +15 credits |
+| Action                          | Bonus credits |
+| ------------------------------- | ------------- |
+| Complete a node (strong pass)   | +1 credit     |
+| Maintain a 7-day streak         | +3 credits    |
+| First enrolment in a new domain | +5 credits    |
+| Refer a friend who signs up     | +10 credits   |
+| Complete a full domain roadmap  | +15 credits   |
 
 **Maximum free credits held at once: 60** (prevents credit hoarding beyond 2 months).
 
@@ -211,26 +216,31 @@ The principle: learners should never feel locked out of their own progress data.
 ## 6. Payment Infrastructure
 
 ### Global payments
+
 **Stripe** — cards, Apple Pay, Google Pay, SEPA, etc.  
 Supported in ~46 countries for payment processing.
 
 ### Ethiopian payments
+
 **Stripe does not support Ethiopia** for payment processing (as of 2026).
 
 Primary gateway for Ethiopia: **Chapa** (developer.chapa.co)
+
 - Supports: Telebirr, CBEBirr, Awash Birr, Yaya Wallet, Visa/Mastercard
 - Native REST API with webhooks
 - Used by Ethiopian startups as the local Stripe equivalent
 
 Secondary options:
+
 - **Telebirr** direct API (Ethio Telecom)
 - **CBE Birr** direct API (Commercial Bank of Ethiopia)
 - **PayPal** (international cards, limited local bank connectivity)
 
 ### Implementation plan
+
 1. Stripe for all non-Ethiopian international subscriptions
 2. Chapa for Ethiopian users (auto-detected by IP/profile country)
-3. Stripe Atlas (US LLC) as the legal entity for Stripe processing, if needed
+3. Stripe Yeneta (US LLC) as the legal entity for Stripe processing, if needed
 
 ---
 
@@ -238,18 +248,19 @@ Secondary options:
 
 ### Unit economics at steady state (100 active free users + 10 Pro users)
 
-| Item | Monthly cost |
-|---|---|
-| Gemini API (free tier, 10% hitting Gemini, avg 100 interactions/user) | ~$1.00 |
-| VPS hosting (2 vCPU, 4GB RAM) | ~$20 |
-| Domain + SSL | ~$1 |
-| **Total operating cost** | **~$22/month** |
-| **Pro revenue (10 × $6)** | **$60/month** |
-| **Net margin** | **+$38/month** |
+| Item                                                                  | Monthly cost   |
+| --------------------------------------------------------------------- | -------------- |
+| Gemini API (free tier, 10% hitting Gemini, avg 100 interactions/user) | ~$1.00         |
+| VPS hosting (2 vCPU, 4GB RAM)                                         | ~$20           |
+| Domain + SSL                                                          | ~$1            |
+| **Total operating cost**                                              | **~$22/month** |
+| **Pro revenue (10 × $6)**                                             | **$60/month**  |
+| **Net margin**                                                        | **+$38/month** |
 
 At 50 Pro users the model is comfortably profitable while keeping 450 free users fully served.
 
 ### Break-even
+
 - **1 Pro subscriber** at $6/month covers ~$6 in server costs
 - **4 Pro subscribers** covers the full VPS + domain bill
 - **10 Pro subscribers** covers 10,000 free AI interactions/month in addition to server costs
@@ -271,17 +282,20 @@ To prevent credit farming and API abuse:
 ## 9. Rollout Phases
 
 ### Phase 1 (MVP — current)
+
 - All features free, no credit system
 - Validate user behaviour and AI cost per user
 - Measure actual Gemini API spend per active user
 
 ### Phase 2 (Beta monetisation)
+
 - Introduce credit system for new signups
 - Grandfather existing users with 6 months of Pro access free
 - Launch Chapa integration for Ethiopia
 - Stripe integration for international
 
 ### Phase 3 (Full launch)
+
 - Campus tier with team management
 - PPP pricing enforced by geolocation
 - Self-hosted onboarding documentation + Docker Hub image
@@ -302,4 +316,4 @@ To prevent credit farming and API abuse:
 
 ---
 
-*Document authored June 2026. Costs based on Gemini 2.5 Flash pricing at the time of writing. Review quarterly.*
+_Document authored June 2026. Costs based on Gemini 2.5 Flash pricing at the time of writing. Review quarterly._

@@ -42,7 +42,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
 
     return domainsAsync.when(
       loading: () => const LoadingShimmer(),
-      error: (_, __) => AtlasErrorWidget(
+      error: (_, __) => YenetaErrorWidget(
         message: 'Unable to load domains.',
         onRetry: () => ref.invalidate(domainsProvider),
       ),

@@ -15,11 +15,14 @@ logging.basicConfig(
 )
 
 app = FastAPI(
-    title="Atlas AI Service",
+    title="Yeneta AI Service",
     version="2.0.0",
     description="LLM generation with three-tier fallback, Redis caching, and SSE streaming.",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    # Mount docs under the same prefix Nginx proxies to (/docs/ai/)
+    # so the Swagger UI can resolve /openapi.json correctly through the proxy.
+    docs_url="/docs/ai",
+    redoc_url="/docs/ai/redoc",
+    openapi_url="/docs/ai/openapi.json",
 )
 
 # ── Middleware ─────────────────────────────────────────────────────────────────

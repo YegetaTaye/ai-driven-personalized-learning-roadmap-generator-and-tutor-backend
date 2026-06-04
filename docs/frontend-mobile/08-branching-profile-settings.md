@@ -17,14 +17,14 @@ Three features that complete the learner's personal experience:
 
 ## API Endpoints
 
-| Method | Path | Notes |
-|--------|------|-------|
-| `GET`    | `/enrollments/:id/branches` | Available branch paths for an enrollment |
-| `POST`   | `/enrollments/:id/branch` | `{branchPath}` — select/change branch |
-| `GET`    | `/users/me` | Current user |
-| `PATCH`  | `/users/me` | `{fullName?, avatarUrl?, preferredLanguage?}` |
-| `POST`   | `/users/me/change-password` | `{currentPassword, newPassword}` → 204 |
-| `DELETE` | `/users/me` | Delete account → 204 |
+| Method   | Path                        | Notes                                         |
+| -------- | --------------------------- | --------------------------------------------- |
+| `GET`    | `/enrollments/:id/branches` | Available branch paths for an enrollment      |
+| `POST`   | `/enrollments/:id/branch`   | `{branchPath}` — select/change branch         |
+| `GET`    | `/users/me`                 | Current user                                  |
+| `PATCH`  | `/users/me`                 | `{fullName?, avatarUrl?, preferredLanguage?}` |
+| `POST`   | `/users/me/change-password` | `{currentPassword, newPassword}` → 204        |
+| `DELETE` | `/users/me`                 | Delete account → 204                          |
 
 ---
 
@@ -58,6 +58,7 @@ lib/
 ## Key Implementation Details
 
 ### Branch Selector Sheet
+
 A `showModalBottomSheet` triggered from `RoadmapScreen` when the user is at a branching node and no path is selected (or they want to change).
 
 - Title: "Choose your learning path"
@@ -68,6 +69,7 @@ A `showModalBottomSheet` triggered from `RoadmapScreen` when the user is at a br
 - Roadmap re-renders filtered by the selected branch
 
 ### Profile Screen (`/profile`)
+
 Mirrors the web ProfilePage account section only (per-enrollment preferences live in the enroll sheet):
 
 - Avatar: `CircleAvatar` with `CachedNetworkImage`; tapping opens edit flow
@@ -78,14 +80,17 @@ Mirrors the web ProfilePage account section only (per-enrollment preferences liv
 - Success: `SnackBar` "Profile updated"
 
 ### Settings Screen (`/settings`)
+
 Four card sections (same as web Settings page):
 
 **Security:**
+
 - Three `TextFormField` inputs: Current password, New password, Confirm password
 - Inline validation (min 8 chars, passwords match)
 - "Update password" button → `POST /users/me/change-password`
 
 **Learning defaults:**
+
 - "Weekly hours goal": `Slider` (range 1–40) + numeric label
 - "Familiarity level": `SegmentedButton` (Beginner / Intermediate / Advanced)
 - "Learning goal": `Wrap` of `ChoiceChip` (Get a job / Upskill / Hobby / Certification)
@@ -93,8 +98,9 @@ Four card sections (same as web Settings page):
 
 **Notification preferences:**
 Three `ToggleRow` widgets (custom pill toggle):
+
 - Decay reminders
-- Quiz result notifications  
+- Quiz result notifications
 - Mastery achievements
 
 `ToggleRow` widget: a `Row` with label on left, `GestureDetector`-wrapped animated pill on right. When on: `AppColors.accent` background, white circle right; when off: `AppColors.border` background, circle left. `AnimatedContainer` for smooth 150ms transition. Saves to `SettingsProvider` immediately.
@@ -110,6 +116,7 @@ Card with `AppColors.accentLight` tinted background:
   - On confirm: `DELETE /users/me` → `authNotifier.logout()` → navigate to `/login`
 
 ### `lib/core/providers/settings_provider.dart`
+
 ```dart
 class LearningDefaults {
   final int? weeklyHours;
@@ -124,7 +131,7 @@ class NotificationPrefs {
 }
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
-  // Persisted with shared_preferences key 'atlas_settings'
+  // Persisted with shared_preferences key 'Yeneta_settings'
   void setLearningDefaults(LearningDefaults defaults) { ... }
   void setNotificationPrefs(NotificationPrefs prefs) { ... }
 }

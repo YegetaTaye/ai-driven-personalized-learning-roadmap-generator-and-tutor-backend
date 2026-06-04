@@ -25,7 +25,7 @@ class DashboardScreen extends ConsumerWidget {
 
     return enrollmentsAsync.when(
       loading: () => const LoadingShimmer(),
-      error: (_, __) => AtlasErrorWidget(
+      error: (_, __) => YenetaErrorWidget(
         message: 'Unable to load your enrollments.',
         onRetry: () => ref.invalidate(enrollmentsWithStatsProvider),
       ),
