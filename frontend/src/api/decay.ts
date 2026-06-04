@@ -57,7 +57,7 @@ export function useMicroQuizMutation() {
 export function useSubmitMicroAttemptMutation() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ quizId, payload, nodeId }: { quizId: string; payload: MicroAttemptPayload; nodeId: string }) =>
+    mutationFn: ({ quizId, payload }: { quizId: string; payload: MicroAttemptPayload; nodeId: string }) =>
       apiClient
         .post<MicroAttemptResult>(`/micro-quizzes/${quizId}/attempt`, payload)
         .then((r) => r.data),

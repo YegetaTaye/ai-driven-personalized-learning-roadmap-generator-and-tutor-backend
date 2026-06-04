@@ -287,7 +287,7 @@ export function LearnContent({ node, enrollmentId, onExplanationRequested, onExp
                   className="rounded-[10px] border p-4 text-[14px]"
                   style={{ borderColor: '#d6cfbf', background: '#f3efe7', fontFamily: 'JetBrains Mono, monospace' }}
                 >
-                  <MarkdownRenderer context="code">{sections.example}</MarkdownRenderer>
+                  <MarkdownRenderer context="content">{sections.example}</MarkdownRenderer>
                   {isStreaming && !sections.commonMistakes.length && <StreamCursor />}
                 </div>
               </div>
