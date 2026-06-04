@@ -206,6 +206,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                     ),
+                    const SizedBox(height: 2),
+                    TextButton.icon(
+                      onPressed: () => context.go('/subscription'),
+                      icon: const Icon(Icons.card_membership_outlined, size: 18),
+                      label: const Text('Subscription & billing'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: AppColors.accent,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                    ),
                   ],
                 ),
               ),

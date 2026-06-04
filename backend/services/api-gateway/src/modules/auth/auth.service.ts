@@ -167,7 +167,6 @@ async function findOrCreateOAuthUser(
 
 export async function handleGoogleCallback(
   code: string,
-  redirectUri = config.oauth.google.callbackUrl,
 ): Promise<{ user: Pick<UserRecord, 'id' | 'email' | 'role'>; tokens: TokenPair }> {
   // Exchange authorization code for tokens
   let tokenRes;
@@ -180,18 +179,13 @@ export async function handleGoogleCallback(
           code,
           client_id: config.oauth.google.clientId,
           client_secret: config.oauth.google.clientSecret,
-          redirect_uri: redirectUri,
+          redirect_uri: config.oauth.google.callbackUrl,
           grant_type: 'authorization_code',
         }),
     );
   } catch (err: unknown) {
-    // Surface provider response (if any) to help debugging redirect_uri mismatch or other 400s
-    const anyErr = err as any;
-    const respBody = anyErr?.response?.body ?? anyErr?.response?.text ?? undefined;
-    const errMsg = anyErr?.message ?? String(anyErr);
-    throw ApiError.internal(
-      `Failed to exchange Google OAuth code: ${errMsg} (redirect_uri=${redirectUri})${respBody ? `; provider_response=${JSON.stringify(respBody)}` : ''}`,
-    );
+    // Surface a clearer error to help debugging transient DNS/network issues
+    throw ApiError.internal(`Failed to exchange Google OAuth code: ${(err as Error).message}`);
   }
 
   // Fetch user profile
@@ -203,12 +197,7 @@ export async function handleGoogleCallback(
         .set('Authorization', `Bearer ${tokenRes.body.access_token as string}`),
     );
   } catch (err: unknown) {
-    const anyErr = err as any;
-    const respBody = anyErr?.response?.body ?? anyErr?.response?.text ?? undefined;
-    const errMsg = anyErr?.message ?? String(anyErr);
-    throw ApiError.internal(
-      `Failed to fetch Google user info: ${errMsg}${respBody ? `; provider_response=${JSON.stringify(respBody)}` : ''}`,
-    );
+    throw ApiError.internal(`Failed to fetch Google user info: ${(err as Error).message}`);
   }
 
   const g = userRes.body as { id: string; email: string; name: string; picture: string };
@@ -224,7 +213,6 @@ export async function handleGoogleCallback(
 
 export async function handleGithubCallback(
   code: string,
-  redirectUri = config.oauth.github.callbackUrl,
 ): Promise<{ user: Pick<UserRecord, 'id' | 'email' | 'role'>; tokens: TokenPair }> {
   // Exchange code for access token with retry
   let tokenRes;
@@ -237,16 +225,10 @@ export async function handleGithubCallback(
           client_id: config.oauth.github.clientId,
           client_secret: config.oauth.github.clientSecret,
           code,
-          redirect_uri: redirectUri,
         }),
     );
   } catch (err: unknown) {
-    const anyErr = err as any;
-    const respBody = anyErr?.response?.body ?? anyErr?.response?.text ?? undefined;
-    const errMsg = anyErr?.message ?? String(anyErr);
-    throw ApiError.internal(
-      `Failed to exchange GitHub OAuth code: ${errMsg} (redirect_uri=${redirectUri})${respBody ? `; provider_response=${JSON.stringify(respBody)}` : ''}`,
-    );
+    throw ApiError.internal(`Failed to exchange GitHub OAuth code: ${(err as Error).message}`);
   }
 
   const accessToken = tokenRes.body.access_token as string;

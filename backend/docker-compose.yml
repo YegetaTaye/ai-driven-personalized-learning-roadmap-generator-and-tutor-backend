@@ -33,7 +33,6 @@ services:
       - '3000:3000'
     environment:
       NODE_ENV: development
-      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-}
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/learner_roadmap
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
@@ -46,7 +45,7 @@ services:
       GITHUB_CALLBACK_URL: ${GITHUB_CALLBACK_URL:-http://localhost:3000/api/v1/auth/oauth/github/callback}
       LEARNING_SERVICE_URL: http://learning-service:3001
       AI_SERVICE_URL: http://ai-service:3002
-      CORS_ALLOWED_ORIGINS: 'http://localhost:5173,http://localhost:3000,https://api.yegna-future.site'
+      CORS_ALLOWED_ORIGINS: 'http://localhost:5173,http://localhost:3000,https://ai-driven-personalized-learning-roa-two.vercel.app'
     depends_on:
       postgres:
         condition: service_healthy
@@ -66,8 +65,8 @@ services:
       REDIS_URL: redis://redis:6379
       AI_SERVICE_URL: http://ai-service:3002
       JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
-      SERPER_API_KEY: ${SERPER_API_KEY:-4ad3b155825be6a44d433458e5c9adf754b0f74b}
-      CORS_ALLOWED_ORIGINS: 'http://localhost:5173,http://localhost:3000,https://api.yegna-future.site'
+      SERPER_API_KEY: '4ad3b155825be6a44d433458e5c9adf754b0f74b'
+      CORS_ALLOWED_ORIGINS: 'http://localhost:5173,http://localhost:3000,https://ai-driven-personalized-learning-roa-two.vercel.app'
     depends_on:
       postgres:
         condition: service_healthy
@@ -82,14 +81,12 @@ services:
     ports:
       - '3002:3002'
     environment:
-      PORT: 3002
+      NODE_ENV: development
       REDIS_URL: redis://redis:6379
-      PHI4_BASE_URL: ${PHI4_BASE_URL:- https://unvaporized-dori-unremonstrated.ngrok-free.dev}
       OLLAMA_BASE_URL: http://host.docker.internal:11434
       OLLAMA_MODEL: qwen2.5:3b
-      GEMINI_API_KEY: ${GEMINI_API_KEY:-AQ.Ab8RN6J4I3Rg8hx_O_9R9CxwLPkGEnQu2H57KluVv3N4OYQOtg}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
-      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      GEMINI_API_KEY: 'AIzaSyA-36tnuEosM8YP_AYDDWGGCuN1LRS-Z2Q'
+      GEMINI_MODEL: gemini-2.5-flash
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     depends_on:

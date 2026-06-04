@@ -16,6 +16,8 @@ import '../../features/instructor/learner_list_screen.dart';
 import '../../features/instructor/learner_progress_screen.dart';
 import '../../features/learn/learn_screen.dart';
 import '../../features/notifications/notifications_screen.dart';
+import '../../features/pricing/go_pro_screen.dart';
+import '../../features/pricing/subscription_screen.dart';
 import '../../features/profile/profile_screen.dart';
 import '../../features/quiz/attempt_review_screen.dart';
 import '../../features/quiz/quiz_screen.dart';
@@ -33,18 +35,18 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: '/dashboard',
     redirect: (context, state) {
       final location = state.matchedLocation;
-      final isAuthRoute = location == '/login' || location == '/register';
+      final isPublicRoute = location == '/login' || location == '/register' || location == '/go-pro';
       final isAuthenticated = auth?.isAuthenticated ?? false;
 
       if (authAsync.isLoading) {
         return null;
       }
 
-      if (!isAuthenticated && !isAuthRoute) {
+      if (!isAuthenticated && !isPublicRoute) {
         return '/login';
       }
 
-      if (isAuthenticated && isAuthRoute) {
+      if (isAuthenticated && isPublicRoute && location != '/go-pro') {
         return '/dashboard';
       }
 
@@ -70,6 +72,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
+      GoRoute(path: '/go-pro', builder: (_, __) => const GoProScreen()),
       ShellRoute(
         builder: (_, __, child) {
           return AppShell(userRole: auth?.user?.role, child: child);
@@ -138,6 +141,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/settings',
             builder: (_, __) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: '/subscription',
+            builder: (_, __) => const SubscriptionScreen(),
           ),
           GoRoute(
             path: '/instructor',
